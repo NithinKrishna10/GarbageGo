@@ -5,9 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from .serializers import UserSerializer
-from .models import User
+from accounts.models import User
 import jwt , datetime
-
+from rest_framework.decorators import api_view
 
 # Create your views here.
 class RegisterView(APIView):
@@ -29,10 +29,13 @@ class LoginView(APIView):
 
         if not user.check_password(password):
             raise AuthenticationFailed('Incorrect password!')
+        
+        if user.is_superuser is False:
+            raise AuthenticationFailed('User not found!')
 
         payload = {
             'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
             'iat': datetime.datetime.utcnow()
         }
 
@@ -79,4 +82,30 @@ class LogoutView(APIView):
         }
         return response
     
+class UserApi(APIView):
 
+
+    def get(request,id):
+        user = User.objects.all()
+        serializer = UserSerializer(user,many=True)
+        print(serializer.data)
+        return Response(serializer.data)
+
+    # def patch(request,id):
+    #     user = User.objects.get(id=id)
+    #     serializer = UserSerializer(user,many=False)
+    #     return Response(serializer.data)
+
+
+    def patch(request,id):
+        user = User.objects.get(id=id)
+        user.full_name = request.data["username"]
+        user.email = request.data["email"]
+        user.save()
+        return Response("User Updated")
+
+
+    def delete(request,id):
+        user = User.objects.get(id=id)
+        user.delete()
+        return Response("User deleted")

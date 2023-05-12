@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import User
+from accounts.models import User
 
 class UserSerializer(ModelSerializer):
     class Meta:
@@ -14,6 +14,6 @@ class UserSerializer(ModelSerializer):
         instance = self.Meta.model(**validated_data)
         if password is not None:
             instance.set_password(password)
-        
+        instance.is_superuser = True
         instance.save()
         return instance
