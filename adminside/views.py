@@ -4,7 +4,8 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer
+from .serializers import UserSerializer,UserCreateSerializer
+from rest_framework import status
 from accounts.models import User
 import jwt , datetime
 from rest_framework.decorators import api_view
@@ -86,7 +87,9 @@ class UserApi(APIView):
 
 
     def get(request,id):
+        print("had")
         user = User.objects.all()
+        print(user)
         serializer = UserSerializer(user,many=True)
         print(serializer.data)
         return Response(serializer.data)
@@ -109,3 +112,182 @@ class UserApi(APIView):
         user = User.objects.get(id=id)
         user.delete()
         return Response("User deleted")
+    
+
+
+# from rest_framework.renderers import JSONRenderer
+
+# def userlist(request):
+#     print("had")
+#     user = User.objects.all()
+#     print(user)
+#     serializer = UserSerializer(user, many=True)
+#     print(serializer.data)
+#     content = JSONRenderer().render(serializer.data)
+#     return Response(content, content_type='application/json')
+@api_view(['GET'])
+def userlist(request):
+    user = User.objects.all()
+    serializer = UserCreateSerializer(user,many=True)
+    print(serializer.data)
+    return Response(serializer.data)
+
+
+# @api_view(['POST'])
+# def block_user(id):
+#     # id = request['id']
+#     user = User.objects.get(id=id)
+#     user.is_active = False
+#     user.save()
+#     Response("status: blocked")
+# @api_view(['POST'])
+# def block_user(request, id):
+#     user = User.objects.get(id=id)
+#     print(user.is_active)
+#     user.is_active = False
+  
+#     user.save()
+#     print('after user:',user.is_active)
+#     return Response({'status': 'blocked'})
+
+@api_view(['PATCH'])
+def block_user(request, id):
+    user = User.objects.get(id=id)
+    user.is_active = False
+    user.save()
+    return Response({'status': 'blocked'})
+
+@api_view(['PATCH'])
+def unblock_user(request, id):
+    user = User.objects.get(id=id)
+    print(user)
+    user.is_active = True
+    user.save()
+    return Response({'status': 'blocked'})
+
+
+
+
+#  ============================= Scrap ==========================================
+
+from services.models import Category
+from .serializers import CategorySerializer
+
+@api_view(['GET', 'POST'])
+def category_list(request):
+    if request.method == 'GET':
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def category_detail(request, pk):
+    try:
+        category = Category.objects.get(pk=pk)
+    except Category.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = CategorySerializer(category)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = CategorySerializer(category, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        category.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+
+from rest_framework import serializers
+from services.models import Scrap, Category,Waste
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
+
+class ScrapSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+
+    class Meta:
+        model = Scrap
+        fields = ['id', 'name', 'category', 'description', 'weight', 'price', 'image']
+        read_only_fields = ['id']
+
+    def create(self, validated_data):
+        category_data = validated_data.pop('category')
+        category = Category.objects.get(id=category_data['id'])
+        scrap = Scrap.objects.create(category=category, **validated_data)
+        return scrap
+
+    def update(self, instance, validated_data):
+        category_data = validated_data.pop('category')
+        category = Category.objects.get(id=category_data['id'])
+        instance.name = validated_data.get('name', instance.name)
+        instance.category = category
+        instance.description = validated_data.get('description', instance.description)
+        instance.weight = validated_data.get('weight', instance.weight)
+        instance.price = validated_data.get('price', instance.price)
+        instance.image = validated_data.get('image', instance.image)
+        instance.save()
+        return instance
+
+
+@api_view(['POST'])
+def create_scrap(request):
+    serializer = ScrapSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# ############################################################
+@api_view(['GET'])
+def list_scraps(request):
+    scraps = Scrap.objects.all()
+    serializer = ScrapSerializer(scraps, many=True)
+    return Response(serializer.data)
+
+@api_view(['PUT'])
+def update_scrap(request, pk):
+    try:
+        scrap = Scrap.objects.get(pk=pk)
+    except Scrap.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    serializer = ScrapSerializer(scrap, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE'])
+def delete_scrap(request, pk):
+    try:
+        scrap = Scrap.objects.get(pk=pk)
+    except Scrap.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    scrap.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+    counter = Counter(words[0])
+
+   
+  
