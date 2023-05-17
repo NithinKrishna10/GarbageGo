@@ -116,27 +116,31 @@ class UserView(APIView):
 @api_view(['GET'])   
 def verify_token(request):
     # token  = request['body']
-    token = request.headers.get('Authorization')
-    print("###################################",token,'############################################')
-    decoded = jwt.decode(token, 'secret', algorithms='HS256')
-    print(decoded)
-    print(decoded.get('id'),'Yes iam back////.......')
-    id = decoded.get('id')
-    user = User.objects.get(id=id)
-    print(user)
-    # serializer = UserSerializer(user)
-    serializer = UserSerializer(user,many=False)
+    try:
+        token = request.headers.get('Authorization')
 
-    if user:
-        userdetails ={
-                    'name': user.name,
-                    'email' : user.email,
-                    'phone': user.phone,
-                }
-       
-        return Response({'user':userdetails})
-    else:
-        return Response({'status' : 'Token Invalid'})
+        print("###################################",token,'############################################')
+        decoded = jwt.decode(token, 'secret', algorithms='HS256')
+        print(decoded)
+        print(decoded.get('id'),'Yes iam back////.......')
+        id = decoded.get('id')
+        user = User.objects.get(id=id)
+        print(user)
+        # serializer = UserSerializer(user)
+        serializer = UserSerializer(user,many=False)
+
+        if user:
+            userdetails ={
+                        'name': user.name,
+                        'email' : user.email,
+                        'phone': user.phone,
+                    }
+        
+            return Response({'user':userdetails})
+        else:
+            return Response({'status' : 'Token Invalid'})
+    except:
+        pass
 
 
 class LogoutView(APIView):
@@ -149,3 +153,6 @@ class LogoutView(APIView):
         return response
     
 
+# for(i=0,i<10,i++)
+# for i in range(10):
+#     print("Hai")

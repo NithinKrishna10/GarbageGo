@@ -37,8 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # External Packages
     'rest_framework',
     'corsheaders',
+    'rest_framework_swagger',
+    'drf-spectacular',
+    # Installed Apps
     'accounts',
     'adminside',
     'services',
@@ -145,3 +149,12 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 
 ]
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS":"drf-spectacular.openapi.AutoSchema"
+}
+
+SPECTACULAR_SETTINGS ={
+    
+}
