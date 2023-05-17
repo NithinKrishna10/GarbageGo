@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_swagger',
-    'drf-spectacular',
+    'drf_spectacular',
     # Installed Apps
     'accounts',
     'adminside',
@@ -152,9 +152,9 @@ AUTHENTICATION_BACKENDS = [
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_SCHEMA_CLASS":"drf-spectacular.openapi.AutoSchema"
+    "DEFAULT_SCHEMA_CLASS":"drf_spectacular.openapi.AutoSchema"
 }
 
 SPECTACULAR_SETTINGS ={
-    
+    "TITLE": "Django DRF Waste Management",
 }

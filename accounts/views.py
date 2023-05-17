@@ -4,11 +4,14 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer
+from .serializers import UserSerializer ,LoginSerializer,LoginDetailsSerializer
 from .models import User
 import jwt , datetime
 from rest_framework import permissions, status
 from rest_framework.decorators import api_view
+from drf_spectacular.utils import extend_schema 
+
+
 # Create your views here.
 # class RegisterView(APIView):
 #     def post(self, request):
@@ -36,6 +39,7 @@ from rest_framework.decorators import api_view
 #         return Response(user.data, status=status.HTTP_201_CREATED)
 #         # return Response(serializer.data)
 class RegisterView(APIView):
+    @extend_schema(responses=UserSerializer)
     def post(self, request):
         data = request.data
         email = data.get('email')
@@ -53,7 +57,52 @@ class RegisterView(APIView):
             print(user,'isdfjakiasdfjkl;')
             return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
 
+# class LoginView(APIView):
+#     @extend_schema(responses=UserSerializer)
+#     def post(self, request):
+#         print("hai Login View")
+#         try:
+#             email = request.data['email']
+#             password = request.data['password']
+#         except:
+#             return Response({'status':'Please provide the mentioned details'})
+#             user = User.objects.filter(email=email).first()
+ 
+        
+#         try:
+#             user = User.objects.get(email=email)
+#             print(user)
+#             if not user.check_password(password):
+#                 Response({'status':'Password is incorrect'})
+#             if user is not None:
+#                 print('kkkkkkkkkkkk')
+#                 payload = {
+#                         'id': user.id,
+#                         'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
+#                         'iat': datetime.datetime.utcnow(),
+#                         'name' : user.name
+#                     }
+#                 userdetails ={
+#                     'name': user.name,
+#                     'email' : user.email,
+#                     'phone': user.phone,
+#                 }
+#                 # userdetails = UserSerializer(user,many=True)
+
+#                 token = jwt.encode(payload, 'secret', algorithm='HS256')
+ 
+#                 print(token,"toooooooooooken")
+#                 return Response({'status' : "Success",'payload' : payload ,'user_jwt': token,'user':userdetails})
+#         except:
+#             if User.DoesNotExist:
+#                 return Response("Email or Password is Wrong") 
 class LoginView(APIView):
+   
+    # @extend_schema(responses=LoginSerializer)
+    @extend_schema(
+    responses=LoginSerializer,
+    request=LoginSerializer,  # Assuming the request schema is the same as the response schema
+)
     def post(self, request):
         print("hai Login View")
         try:
@@ -61,8 +110,7 @@ class LoginView(APIView):
             password = request.data['password']
         except:
             return Response({'status':'Please provide the mentioned details'})
-            user = User.objects.filter(email=email).first()
- 
+        user = User.objects.filter(email=email).first()
         
         try:
             user = User.objects.get(email=email)
@@ -70,6 +118,7 @@ class LoginView(APIView):
             if not user.check_password(password):
                 Response({'status':'Password is incorrect'})
             if user is not None:
+                # user = LoginSerializer(user)
                 print('kkkkkkkkkkkk')
                 payload = {
                         'id': user.id,
@@ -90,15 +139,35 @@ class LoginView(APIView):
         except:
             if User.DoesNotExist:
                 return Response("Email or Password is Wrong") 
+            
+
+
+
+# class LoginApi(APIView):
+#     @extend_schema(responses=LoginSerializer)
+#     def post(self, request):
+#         email = request.data.get('email')
+#         password = request.data.get('password')
+#         user = User.objects.filter(email=email, password=password).first()
+#         if user:
+#             user = LoginDetailsSerializer(user)
+#             auth_token = jwt.encode({'email': user.data.get('email'), 'userid': user.data.get('userid'),
+#                                      'exp': datetime.datetime.timestamp((datetime.datetime.now() + datetime.timedelta(days=1, hours=3)))},
+#                                     settings.SECRET_KEY, 'HS256')
+#             data = {
+#                 'user': user.data, 'token': auth_token
+#             }
+#             return Response({'data':data, 'issuccess':True}, status=status.HTTP_200_OK)
+#         return Response({"message": "Invalid Credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class UserView(APIView):
     JWT_SECRET = 'secret'
     JWT_ALGORITHM = 'HS256'
-
+    @extend_schema(responses=UserSerializer)
     def get(self, request):
         print(request.data,'hjdfhjkasdfhjkasdfhjkasdfhjksdf')
-        # token = request.data['body']
+        token = request.data['body']
         # print(token)
         # if not token:
         #     raise AuthenticationFailed('Unauthenticated!')
@@ -113,9 +182,9 @@ class UserView(APIView):
         serializer = UserSerializer(user)
         return Response(serializer.data)
     
-@api_view(['GET'])   
+@api_view(['GET'])
+@extend_schema(responses=UserSerializer)   
 def verify_token(request):
-    # token  = request['body']
     try:
         token = request.headers.get('Authorization')
 
@@ -127,14 +196,15 @@ def verify_token(request):
         user = User.objects.get(id=id)
         print(user)
         # serializer = UserSerializer(user)
-        serializer = UserSerializer(user,many=False)
+       
 
         if user:
-            userdetails ={
-                        'name': user.name,
-                        'email' : user.email,
-                        'phone': user.phone,
-                    }
+            userdetails = UserSerializer(user,many=False)
+            # userdetails ={
+            #             'name': user.name,
+            #             'email' : user.email,
+            #             'phone': user.phone,
+            #         }
         
             return Response({'user':userdetails})
         else:

@@ -17,3 +17,14 @@ class UserSerializer(ModelSerializer):
         
         instance.save()
         return instance
+    
+class LoginSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email','password']
+
+
+class LoginDetailsSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'email','phone']

@@ -20,7 +20,8 @@ class UserSerializer(ModelSerializer):
         instance.is_superuser = True
         instance.save()
         return instance
-    
+
+
 class UserCreateSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
@@ -71,3 +72,4 @@ class ScrapSerializer(serializers.ModelSerializer):
     class Meta:
         model = Scrap
         fields = ['id', 'name', 'category', 'description', 'weight', 'price', 'image']
+

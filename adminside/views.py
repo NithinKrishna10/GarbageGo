@@ -9,9 +9,10 @@ from rest_framework import status
 from accounts.models import User
 import jwt , datetime
 from rest_framework.decorators import api_view
-
+from drf_spectacular.utils import extend_schema
 # Create your views here.
 class RegisterView(APIView):
+    @extend_schema(responses=UserSerializer)
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -19,6 +20,7 @@ class RegisterView(APIView):
         return Response(serializer.data)
 
 class LoginView(APIView):
+    @extend_schema(responses=UserSerializer)
     def post(self, request):
         email = request.data['email']
         password = request.data['password']
@@ -55,7 +57,7 @@ class LoginView(APIView):
 class UserView(APIView):
     JWT_SECRET = 'secret'
     JWT_ALGORITHM = 'HS256'
-
+    @extend_schema(responses=UserSerializer)
     def get(self, request):
         print(request)
         token = request.COOKIES.get('jwt')
@@ -85,7 +87,7 @@ class LogoutView(APIView):
     
 class UserApi(APIView):
 
-
+    @extend_schema(responses=UserSerializer)
     def get(request,id):
         print("had")
         user = User.objects.all()
@@ -126,6 +128,7 @@ class UserApi(APIView):
 #     content = JSONRenderer().render(serializer.data)
 #     return Response(content, content_type='application/json')
 @api_view(['GET'])
+@extend_schema(responses=UserSerializer)
 def userlist(request):
     user = User.objects.all()
     serializer = UserCreateSerializer(user,many=True)
