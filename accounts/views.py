@@ -57,48 +57,10 @@ class RegisterView(APIView):
             print(user,'isdfjakiasdfjkl;')
             return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
 
-# class LoginView(APIView):
-#     @extend_schema(responses=UserSerializer)
-#     def post(self, request):
-#         print("hai Login View")
-#         try:
-#             email = request.data['email']
-#             password = request.data['password']
-#         except:
-#             return Response({'status':'Please provide the mentioned details'})
-#             user = User.objects.filter(email=email).first()
- 
-        
-#         try:
-#             user = User.objects.get(email=email)
-#             print(user)
-#             if not user.check_password(password):
-#                 Response({'status':'Password is incorrect'})
-#             if user is not None:
-#                 print('kkkkkkkkkkkk')
-#                 payload = {
-#                         'id': user.id,
-#                         'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
-#                         'iat': datetime.datetime.utcnow(),
-#                         'name' : user.name
-#                     }
-#                 userdetails ={
-#                     'name': user.name,
-#                     'email' : user.email,
-#                     'phone': user.phone,
-#                 }
-#                 # userdetails = UserSerializer(user,many=True)
 
-#                 token = jwt.encode(payload, 'secret', algorithm='HS256')
- 
-#                 print(token,"toooooooooooken")
-#                 return Response({'status' : "Success",'payload' : payload ,'user_jwt': token,'user':userdetails})
-#         except:
-#             if User.DoesNotExist:
-#                 return Response("Email or Password is Wrong") 
 class LoginView(APIView):
    
-    # @extend_schema(responses=LoginSerializer)
+ 
     @extend_schema(
     responses=LoginSerializer,
     request=LoginSerializer,  # Assuming the request schema is the same as the response schema
@@ -108,6 +70,7 @@ class LoginView(APIView):
         try:
             email = request.data['email']
             password = request.data['password']
+            print(password)
         except:
             return Response({'status':'Please provide the mentioned details'})
         user = User.objects.filter(email=email).first()

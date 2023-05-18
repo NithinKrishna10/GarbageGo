@@ -96,10 +96,6 @@ class UserApi(APIView):
         print(serializer.data)
         return Response(serializer.data)
 
-    # def patch(request,id):
-    #     user = User.objects.get(id=id)
-    #     serializer = UserSerializer(user,many=False)
-    #     return Response(serializer.data)
 
 
     def patch(request,id):
@@ -116,42 +112,14 @@ class UserApi(APIView):
         return Response("User deleted")
     
 
-
-# from rest_framework.renderers import JSONRenderer
-
-# def userlist(request):
-#     print("had")
-#     user = User.objects.all()
-#     print(user)
-#     serializer = UserSerializer(user, many=True)
-#     print(serializer.data)
-#     content = JSONRenderer().render(serializer.data)
-#     return Response(content, content_type='application/json')
 @api_view(['GET'])
 @extend_schema(responses=UserSerializer)
 def userlist(request):
     user = User.objects.all()
     serializer = UserCreateSerializer(user,many=True)
-    print(serializer.data)
+    # print(serializer.data)
     return Response(serializer.data)
 
-
-# @api_view(['POST'])
-# def block_user(id):
-#     # id = request['id']
-#     user = User.objects.get(id=id)
-#     user.is_active = False
-#     user.save()
-#     Response("status: blocked")
-# @api_view(['POST'])
-# def block_user(request, id):
-#     user = User.objects.get(id=id)
-#     print(user.is_active)
-#     user.is_active = False
-  
-#     user.save()
-#     print('after user:',user.is_active)
-#     return Response({'status': 'blocked'})
 
 @api_view(['PATCH'])
 def block_user(request, id):
@@ -174,7 +142,6 @@ def unblock_user(request, id):
 #  ============================= Scrap ==========================================
 
 from services.models import Category
-from .serializers import CategorySerializer
 
 @api_view(['GET', 'POST'])
 def category_list(request):

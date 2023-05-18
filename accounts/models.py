@@ -19,17 +19,6 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = []
 
 
-# class Address(models.Model):
-#     Table Address{
-#   id integer
-#   User varchar
-#   address varchar
-#   build_no integer
-#   pincode integer
-#   phone integer
-#   landmark varchar
-#   state varchar
-#   district varchar
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(blank=True, upload_to='userprofile')
