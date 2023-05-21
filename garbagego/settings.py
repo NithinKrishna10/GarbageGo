@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'adminside',
     'services',
     'Scrap',
+    'waste',
 ]
 
 MIDDLEWARE = [

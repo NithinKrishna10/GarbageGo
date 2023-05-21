@@ -18,6 +18,9 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    def __str__(self) -> str:
+        return self.name
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -28,21 +31,32 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.first_name
 
-   
+
+
+class District(models.Model):
+    name= models.CharField(max_length=50)
+    state = models.CharField(max_length=255,default=None)
+    def __str__(self) -> str:
+        return self.name 
+
+class City(models.Model):
+    name= models.CharField(max_length=50)
+    district = models.ForeignKey(District,on_delete=models.CASCADE,default=None)
+
+    def __str__(self) -> str:
+        return self.name
 
 class Address(models.Model):
+    name=models.CharField(max_length=255,default='null')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
     address1 = models.CharField(max_length=255)
-    address2 = models.CharField(max_length=255, blank=True)
-    city = models.CharField(max_length=255)
+    district = models.ForeignKey(District,on_delete=models.CASCADE,default=None)
+    city = models.ForeignKey(City,on_delete=models.CASCADE,default=None)
     phone1 = models.CharField(max_length=15,default=0)
-    state = models.CharField(max_length=255)
     country = models.CharField(max_length=255)
     pincode = models.CharField(max_length=255)
-    phone2 = models.CharField(max_length=15,default=0)
     
     def __str__(self):
-        return self.user.first_name
+        return self.user.name
 
 

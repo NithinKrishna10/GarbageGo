@@ -4,40 +4,14 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer ,LoginSerializer,LoginDetailsSerializer
-from .models import User
+from .serializers import UserSerializer ,LoginSerializer,LoginDetailsSerializer,AddressSerializer,CitySerializer,DistrictSerializer,AddressPostSerializer
+from .models import User,Address,City,District
 import jwt , datetime
 from rest_framework import permissions, status
 from rest_framework.decorators import api_view
 from drf_spectacular.utils import extend_schema 
 
 
-# Create your views here.
-# class RegisterView(APIView):
-#     def post(self, request):
-#         print(request.data)
-#         # serializer = UserSerializer(data=request.data)
-#         # serializer.is_valid(raise_exception=True)
-#         # serializer.save()
-#         data = request.data
-        
-#         email = data['email']
-#         emaiexit = User.objects.filter(email=email)
-#         print("dhisfklertyiwocnvm,x.asdfhkluj :" ,emaiexit)
-#         if emaiexit:
-#             errors = "alredy exits"
-#             print(errors)
-#             return Response(errors, status=status.HTTP_400_BAD_REQUEST)
-#         serializer = UserSerializer(data=data)
-#         print(serializer)
-#         if not serializer.is_valid():
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#         user = serializer.create(serializer.validated_data)
-#         user = UserSerializer(user)
-
-#         return Response(user.data, status=status.HTTP_201_CREATED)
-#         # return Response(serializer.data)
 class RegisterView(APIView):
     @extend_schema(responses=UserSerializer)
     def post(self, request):
@@ -106,23 +80,6 @@ class LoginView(APIView):
 
 
 
-# class LoginApi(APIView):
-#     @extend_schema(responses=LoginSerializer)
-#     def post(self, request):
-#         email = request.data.get('email')
-#         password = request.data.get('password')
-#         user = User.objects.filter(email=email, password=password).first()
-#         if user:
-#             user = LoginDetailsSerializer(user)
-#             auth_token = jwt.encode({'email': user.data.get('email'), 'userid': user.data.get('userid'),
-#                                      'exp': datetime.datetime.timestamp((datetime.datetime.now() + datetime.timedelta(days=1, hours=3)))},
-#                                     settings.SECRET_KEY, 'HS256')
-#             data = {
-#                 'user': user.data, 'token': auth_token
-#             }
-#             return Response({'data':data, 'issuccess':True}, status=status.HTTP_200_OK)
-#         return Response({"message": "Invalid Credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-
 
 class UserView(APIView):
     JWT_SECRET = 'secret'
@@ -162,12 +119,12 @@ def verify_token(request):
        
 
         if user:
-            userdetails = UserSerializer(user,many=False)
-            # userdetails ={
-            #             'name': user.name,
-            #             'email' : user.email,
-            #             'phone': user.phone,
-            #         }
+            # userdetails = UserSerializer(user,many=False)
+            userdetails ={
+                        'name': user.name,
+                        'email' : user.email,
+                        'phone': user.phone,
+                    }
         
             return Response({'user':userdetails})
         else:
@@ -189,3 +146,60 @@ class LogoutView(APIView):
 # for(i=0,i<10,i++)
 # for i in range(10):
 #     print("Hai")
+class AddressListAPIView(APIView):
+    def get(self, request,id):
+        print(request,id)
+        userId = id  # Assuming you are using authentication and the user ID is available in the request
+        print(userId)
+        addresses = Address.objects.filter(user=userId)
+        print(addresses)
+        serializer = AddressSerializer(addresses, many=True)
+        return Response(serializer.data)
+
+
+class AddressPostAPIView(APIView):
+    print("kpodfij")
+    def post(self, request):
+        print(request.data)
+        serializer = AddressPostSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors,"errooooooooooooooooooooooor")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+
+
+
+class DistrictListAPIView(APIView):
+    def get(self, request):
+        districts = District.objects.all()
+        serializer = DistrictSerializer(districts, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = DistrictSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CityListAPIView(APIView):
+    def get(self, request):
+        cities = City.objects.all()
+        serializer = CitySerializer(cities, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = CitySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+

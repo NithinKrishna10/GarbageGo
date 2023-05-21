@@ -44,3 +44,18 @@ class ScrapCategorySerializer(ModelSerializer):
     class Meta:
         model = ScrapCategory
         fields = '__all__'
+
+
+
+from waste.models import Waste,WasteCategory
+
+class WasteSerializer(ModelSerializer):
+    class Meta:
+        model = Waste
+        fields = '__all__'
+
+
+class WasteCategorySerializer(ModelSerializer):
+    class Meta:
+        model = WasteCategory
+        fields = '__all__'

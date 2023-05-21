@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import User
+from .models import User,Address,City,District
 
 class UserSerializer(ModelSerializer):
     class Meta:
@@ -28,3 +28,26 @@ class LoginDetailsSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'name', 'email','phone']
+
+
+class CitySerializer(ModelSerializer):
+    class Meta:
+        model=City
+        fields ='__all__'
+class DistrictSerializer(ModelSerializer):
+    class Meta:
+        model=District
+        fields ='__all__'
+
+class AddressSerializer(ModelSerializer):
+    user = UserSerializer()
+    district = DistrictSerializer()
+    city =  CitySerializer()
+    class Meta:
+        model = Address
+        fields = '__all__'
+
+class AddressPostSerializer(ModelSerializer):
+    class Meta:
+        model = Address
+        fields = '__all__'
