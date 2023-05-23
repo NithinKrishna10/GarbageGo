@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RegisterView, LoginView, UserView, LogoutView,AddressListAPIView,DistrictListAPIView,CityListAPIView,AddressPostAPIView
+from .views import RegisterView, LoginView, UserView, LogoutView,AddressListAPIView,DistrictListAPIView,CityListAPIView,AddressPostAPIView,OrderListAPIView
 from . import views
 urlpatterns = [
     path('register', RegisterView.as_view()),
@@ -12,5 +12,5 @@ urlpatterns = [
     path('verify_user',views.verify_token),
     path('districts', DistrictListAPIView.as_view(), name='district-list'),
     path('cities', CityListAPIView.as_view(), name='city-list'),
-
+    path('orders/<int:pk>/', OrderListAPIView.as_view(), name='order-detail'),
 ]

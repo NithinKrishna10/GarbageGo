@@ -3,6 +3,7 @@ from .views import RegisterView, LoginView, UserView, LogoutView,UserApi
 from . import views
 from .scrap import ScrapListAPIView,ScrapCategoryView
 from . import scrap
+from .orders import OrderDetailAPIView,OrderListAPIView
 
 urlpatterns = [
     path('register', RegisterView.as_view()),
@@ -20,7 +21,10 @@ urlpatterns = [
     path('scraps/', ScrapListAPIView.as_view(), name='scrap-list'),
     path('scrapp/<int:pk>/', scrap.ScrapEditAPIView, name='scrap-detail'),
     # path('scraps/<int:pk>/', ScrapRetrieveUpdateDestroyAPIView.as_view(), name='scrap-detail'),   
+    # orders
 
+    path('orders', OrderListAPIView.as_view(), name='order-list'),
+    path('orders/<int:pk>/', OrderDetailAPIView.as_view(), name='order-detail'),
         
 
 ]

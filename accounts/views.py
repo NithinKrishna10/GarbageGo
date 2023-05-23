@@ -48,7 +48,7 @@ class LoginView(APIView):
         except:
             return Response({'status':'Please provide the mentioned details'})
         user = User.objects.filter(email=email).first()
-        
+        print(user.password)
         try:
             user = User.objects.get(email=email)
             print(user)
@@ -108,19 +108,19 @@ def verify_token(request):
     try:
         token = request.headers.get('Authorization')
 
-        print("###################################",token,'############################################')
+        # print("###################################",token,'############################################')
         decoded = jwt.decode(token, 'secret', algorithms='HS256')
-        print(decoded)
-        print(decoded.get('id'),'Yes iam back////.......')
+        # print(decoded)
+        # print(decoded.get('id'),'Yes iam back////.......')
         id = decoded.get('id')
         user = User.objects.get(id=id)
-        print(user)
-        # serializer = UserSerializer(user)
+     
        
 
         if user:
             # userdetails = UserSerializer(user,many=False)
             userdetails ={
+                        'id':user.id,
                         'name': user.name,
                         'email' : user.email,
                         'phone': user.phone,
@@ -130,7 +130,7 @@ def verify_token(request):
         else:
             return Response({'status' : 'Token Invalid'})
     except:
-        pass
+        return Response({'status' : 'Token Invalid'})
 
 
 class LogoutView(APIView):
@@ -147,32 +147,31 @@ class LogoutView(APIView):
 # for i in range(10):
 #     print("Hai")
 class AddressListAPIView(APIView):
-    def get(self, request,id):
-        print(request,id)
-        userId = id  # Assuming you are using authentication and the user ID is available in the request
-        print(userId)
-        addresses = Address.objects.filter(user=userId)
-        print(addresses)
-        serializer = AddressSerializer(addresses, many=True)
-        return Response(serializer.data)
+    try:
+        def get(self, request,id):
+            print(request,id,'dlsjflsdjflsjdl')
+            userId = id  # Assuming you are using authentication and the user ID is available in the request
+            print(userId)
+            addresses = Address.objects.filter(user=userId)
+            print(addresses)
+            serializer = AddressSerializer(addresses, many=True)
+            return Response(serializer.data)
+    except:
+        pass
 
 
 class AddressPostAPIView(APIView):
-    print("kpodfij")
-    def post(self, request):
-        print(request.data)
-        serializer = AddressPostSerializer(data=request.data)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print(serializer.errors,"errooooooooooooooooooooooor")
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-
-
-
-
+   
+    try:
+        def post(self, request):
+            serializer = AddressPostSerializer(data=request.data)
+            
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except:
+        pass
 
 class DistrictListAPIView(APIView):
     def get(self, request):
@@ -201,5 +200,12 @@ class CityListAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+from orders.models import Order
+from adminside.serializers import OrderSerializer
 
-
+class OrderListAPIView(APIView):
+    def get(self, request,pk):
+        user = User.objects.get(id=pk)
+        orders = Order.objects.filter(customer= user)
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data)
