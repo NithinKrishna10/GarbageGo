@@ -72,6 +72,81 @@ paths:
       responses:
         '200':
           description: No response body
+  /adminside/orders:
+    get:
+      operationId: adminside_orders_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: adminside_orders_create
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/orders/{id}/:
+    get:
+      operationId: adminside_orders_retrieve_2
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: adminside_orders_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: adminside_orders_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
   /adminside/register:
     post:
       operationId: adminside_register_create
@@ -88,6 +163,70 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
           description: ''
+  /adminside/scrap_category:
+    get:
+      operationId: adminside_scrap_category_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: adminside_scrap_category_create
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/scrapp/{id}/:
+    patch:
+      operationId: adminside_scrapp_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/scraps/:
+    get:
+      operationId: adminside_scraps_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: adminside_scraps_create
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /adminside/unblock_user/{id}/:
     patch:
       operationId: adminside_unblock_user_partial_update
@@ -172,6 +311,82 @@ paths:
       responses:
         '200':
           description: No response body
+  /api/addresses/{id}/:
+    get:
+      operationId: api_addresses_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/addressess:
+    post:
+      operationId: api_addressess_create
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/cities:
+    get:
+      operationId: api_cities_retrieve
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: api_cities_create
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/districts:
+    get:
+      operationId: api_districts_retrieve
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: api_districts_create
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /api/login:
     post:
       operationId: api_login_create
@@ -212,11 +427,41 @@ paths:
       responses:
         '200':
           description: No response body
+  /api/orders/{id}/:
+    get:
+      operationId: api_orders_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /api/register:
     post:
       operationId: api_register_create
       tags:
       - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
@@ -459,6 +704,76 @@ paths:
       operationId: api_verify_user_retrieve
       tags:
       - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /orderplace_order:
+    post:
+      operationId: orderplace_order_create
+      tags:
+      - orderplace_order
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /place:
+    post:
+      operationId: place_create
+      tags:
+      - place
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /waste/waste-categories:
+    get:
+      operationId: waste_waste_categories_retrieve
+      tags:
+      - waste
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: waste_waste_categories_create
+      tags:
+      - waste
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /waste/wastes:
+    get:
+      operationId: waste_wastes_retrieve
+      tags:
+      - waste
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: waste_wastes_create
+      tags:
+      - waste
       security:
       - cookieAuth: []
       - basicAuth: []

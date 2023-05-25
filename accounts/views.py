@@ -13,6 +13,11 @@ from drf_spectacular.utils import extend_schema
 
 
 class RegisterView(APIView):
+     
+    @extend_schema(
+    responses=UserSerializer,
+    request=UserSerializer,  
+)
     @extend_schema(responses=UserSerializer)
     def post(self, request):
         data = request.data
