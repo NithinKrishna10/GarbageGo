@@ -10,7 +10,7 @@ import jwt , datetime
 from rest_framework import permissions, status
 from rest_framework.decorators import api_view
 from drf_spectacular.utils import extend_schema 
-
+from rest_framework.exceptions import APIException
 
 class RegisterView(APIView):
      
@@ -20,21 +20,29 @@ class RegisterView(APIView):
 )
     @extend_schema(responses=UserSerializer)
     def post(self, request):
-        data = request.data
-        email = data.get('email')
-        print('iam in the register')
-        if User.objects.filter(email=email).exists():
-            # errors = {'email': ['Email already exists.']}
-            return Response({"status":"Email already exists"}, status=status.HTTP_409_CONFLICT)
+        try:
+            data = request.data
+            email = data.get('email')
+            print('iam in the register')
+            if User.objects.filter(email=email).exists():
+                # errors = {'email': ['Email already exists.']}
+                return Response({"status":"Email already exists"}, status=status.HTTP_409_CONFLICT)
 
-        serializer = UserSerializer(data=data)
-        if not serializer.is_valid():
-            print(serializer.errors)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            user = serializer.save()
-            print(user,'isdfjakiasdfjkl;')
-            return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+            serializer = UserSerializer(data=data)
+            if not serializer.is_valid():
+                print(serializer.errors)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                user = serializer.save()
+                print(user,'isdfjakiasdfjkl;')
+                return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+        except APIException as e:
+            return Response(
+                {
+                    'register_errors': str(e)
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class LoginView(APIView):
@@ -93,10 +101,6 @@ class UserView(APIView):
     def get(self, request):
         print(request.data,'hjdfhjkasdfhjkasdfhjkasdfhjksdf')
         token = request.data['body']
-        # print(token)
-        # if not token:
-        #     raise AuthenticationFailed('Unauthenticated!')
-
         try:
             payload = jwt.decode(token, self.JWT_SECRET, algorithms=[self.JWT_ALGORITHM])
             print(payload)
@@ -134,26 +138,40 @@ def verify_token(request):
             return Response({'user':userdetails})
         else:
             return Response({'status' : 'Token Invalid'})
-    except:
-        return Response({'status' : 'Token Invalid'})
+    except APIException as e:
+        return Response(
+                {
+                    'verify_errors': str(e)
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class LogoutView(APIView):
     def post(self, request):
-        response = Response()
-        response.delete_cookie('jwt')
-        response.data = {
-            'message': 'success'
-        }
-        return response
-    
+        try:
+            response = Response()
+            response.delete_cookie('jwt')
+            response.data = {
+                'message': 'success'
+            }
+            
+        except APIException as e:
+            return Response(
+                {
+                    'order_errors': str(e)
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+  
 
 # for(i=0,i<10,i++)
 # for i in range(10):
 #     print("Hai")
 class AddressListAPIView(APIView):
-    try:
-        def get(self, request,id):
+
+    def get(self, request,id):
+        try:
             print(request,id,'dlsjflsdjflsjdl')
             userId = id  # Assuming you are using authentication and the user ID is available in the request
             print(userId)
@@ -161,29 +179,47 @@ class AddressListAPIView(APIView):
             print(addresses)
             serializer = AddressSerializer(addresses, many=True)
             return Response(serializer.data)
-    except:
-        pass
+        except APIException as e:
+            return Response(
+                {
+                    'Addres_error': str(e)
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class AddressPostAPIView(APIView):
    
-    try:
         def post(self, request):
-            serializer = AddressPostSerializer(data=request.data)
-            
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    except:
-        pass
+            try:
+                serializer = AddressPostSerializer(data=request.data)
+                
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            except APIException as e:
+                return Response(
+                    {
+                        'Address_errors': str(e)
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+
+                )
+                
 
 class DistrictListAPIView(APIView):
     def get(self, request):
-        districts = District.objects.all()
-        serializer = DistrictSerializer(districts, many=True)
-        return Response(serializer.data)
+        try:
 
+            districts = District.objects.all()
+            serializer = DistrictSerializer(districts, many=True)
+            return Response(serializer.data)
+        except APIException as e:
+            return Response(
+                {'district': str(e)},
+                 status=status.HTTP_400_BAD_REQUEST
+            )
     def post(self, request):
         serializer = DistrictSerializer(data=request.data)
         if serializer.is_valid():
@@ -193,9 +229,15 @@ class DistrictListAPIView(APIView):
 
 class CityListAPIView(APIView):
     def get(self, request):
-        cities = City.objects.all()
-        serializer = CitySerializer(cities, many=True)
-        return Response(serializer.data)
+        try:
+            cities = City.objects.all()
+            serializer = CitySerializer(cities, many=True)
+            return Response(serializer.data)
+        except APIException as e:
+            return Response(
+                {'city except': str(e)},
+                 status=status.HTTP_400_BAD_REQUEST
+            )
 
     def post(self, request):
         serializer = CitySerializer(data=request.data)
@@ -210,7 +252,13 @@ from adminside.serializers import OrderSerializer
 
 class OrderListAPIView(APIView):
     def get(self, request,pk):
-        user = User.objects.get(id=pk)
-        orders = Order.objects.filter(customer= user)
-        serializer = OrderSerializer(orders, many=True)
-        return Response(serializer.data)
+        try:
+            user = User.objects.get(id=pk)
+            orders = Order.objects.filter(customer= user)
+            serializer = OrderSerializer(orders, many=True)
+            return Response(serializer.data)
+        except APIException as e:
+            return Response(
+                {'OrderList except': str(e)},
+                 status=status.HTTP_400_BAD_REQUEST
+            )
