@@ -259,4 +259,3 @@ def delete_scrap(request, pk):
 
 
    
-  

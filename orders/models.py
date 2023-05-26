@@ -26,6 +26,15 @@ class Order(models.Model):
     def __str__(self):
         return f"Order #{self.pk} - {self.customer.name}"
 
+
+
+
+
+
+
+
+
+
 class OrderDetail(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
