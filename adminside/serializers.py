@@ -46,17 +46,20 @@ class WasteCategorySerializer(ModelSerializer):
     class Meta:
         model = WasteCategory
         fields = '__all__'
-#  customer = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
-#     waste_type = models.ForeignKey(WasteCategory,on_delete=models.CASCADE)
-#     address = models.ForeignKey(Address,on_delete=models.CASCADE)
-#     pickup_date = models.DateField()
-#     additional_notes = models.TextField(blank=True)
-#     is_ordered = models.BooleanField(default=False)
-#     waste_weight = models.DecimalField(max_digits=10, decimal_places=2,default=0)
-#     price = models.DecimalField(max_digits=10, decimal_places=2,default=0)
-#     status = models.CharField(max_length=50, choices=STATUS_CHOICES,default='Booked')
-#     def __str__(self):
-#         return f"Order #{self.pk} - {self.customer.name}"
+
+from scrap.models import ScrapCategory, Scrap
+
+class ScrapCategorySerializer(ModelSerializer):
+    class Meta:
+        model = ScrapCategory
+        fields = '__all__'
+
+class ScrapSerializer(ModelSerializer):
+    class Meta:
+        model = Scrap
+        fields = '__all__'
+
+
 
 
 class OrderSerializer(serializers.ModelSerializer):

@@ -26,6 +26,7 @@ class WasteCategoryView(APIView):
                  status=status.HTTP_400_BAD_REQUEST
             )
     def post(self,request):
+        print('im here da')
         try:
             serializer = WasteCategorySerializer(data = request.data)
             if serializer.is_valid():
@@ -40,6 +41,7 @@ class WasteCategoryView(APIView):
 
 class WasteListAPIView(APIView):
     def get(self, request):
+        print('im here')
         try:
             waste = Waste.objects.all()
             serializer = WasteSerializer(waste, many=True)
@@ -52,6 +54,8 @@ class WasteListAPIView(APIView):
 
 
     def post(self, request):
+        print('im here')
+
         try:
             serializer = WasteSerializer(data=request.data)
             if serializer.is_valid():

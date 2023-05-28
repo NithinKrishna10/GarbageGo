@@ -20,7 +20,7 @@ class Waste(models.Model):
     description = models.TextField()
     weight = models.DecimalField(max_digits=10, decimal_places=2)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='scrap_images/')
+    image = models.ImageField(upload_to='waste_category', blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

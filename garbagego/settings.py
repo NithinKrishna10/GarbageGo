@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'accounts',
     'adminside',
     'services',
-    # 'Scrap',
+    'scrap',
     'waste',
     'orders',
 ]
