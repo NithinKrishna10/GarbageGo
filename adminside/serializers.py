@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from accounts.models import User
 from rest_framework import serializers
-from services.models import Category,Scrap,Waste
+from services.models import Category,Waste
 from orders.models import Order
 
 class UserSerializer(ModelSerializer):
@@ -31,19 +31,6 @@ class UserCreateSerializer(ModelSerializer):
 
 
 
-
-from Scrap.models import Scrap ,ScrapCategory
-
-class ScrapSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Scrap
-        fields = '__all__'
-
-
-class ScrapCategorySerializer(ModelSerializer):
-    class Meta:
-        model = ScrapCategory
-        fields = '__all__'
 
 
 

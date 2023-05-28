@@ -37,7 +37,9 @@ urlpatterns = [
     path('adminside/',include('adminside.urls')),
     path('order',include('orders.urls')),
     path('place',PlaceOrderAPIView.as_view()),
-    path('waste/',include('waste.urls'))
+    path('waste/',include('waste.urls')),
+     path('scrap/',include('scrap.urls')),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

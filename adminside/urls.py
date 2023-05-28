@@ -1,7 +1,6 @@
 from django.urls import path
 from .views import RegisterView, LoginView, UserView, LogoutView,UserApi
 from . import views
-from .scrap import ScrapListAPIView,ScrapCategoryView
 from . import scrap
 from .orders import OrderDetailAPIView,OrderListAPIView
 
@@ -17,9 +16,6 @@ urlpatterns = [
     path('addcat',views.category_list,name="addcat"),
 
 
-    path('scrap_category',ScrapCategoryView.as_view(),name='scrap-list'),
-    path('scraps/', ScrapListAPIView.as_view(), name='scrap-list'),
-    path('scrapp/<int:pk>/', scrap.ScrapEditAPIView, name='scrap-detail'),
     # path('scraps/<int:pk>/', ScrapRetrieveUpdateDestroyAPIView.as_view(), name='scrap-detail'),   
     # orders
 

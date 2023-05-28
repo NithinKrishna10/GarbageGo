@@ -79,3 +79,5 @@ def WasteEditAPIView(request, pk):
                 {'Waste_except': str(e)},
                  status=status.HTTP_400_BAD_REQUEST
             )
+            
+            
