@@ -39,6 +39,54 @@ class WasteCategoryView(APIView):
                  status=status.HTTP_400_BAD_REQUEST
             )
 
+
+
+
+from rest_framework import status
+
+class WasteCategoryEdit(APIView):
+    def get(self, request, pk):
+        try:
+            waste = WasteCategory.objects.get(id=pk)
+            waste_serializer = WasteCategorySerializer(waste, many=False)
+            return Response(waste_serializer.data)
+        except WasteCategory.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+    def patch(self, request, pk):
+        print(pk,request.data)
+        try:
+            
+            category = WasteCategory.objects.get(pk=pk)
+        except WasteCategory.DoesNotExist:
+            return Response({'error': 'WasteCategory not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = WasteCategorySerializer(category, data=request.data, partial=True)
+        
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        print(serializer.errors,"show the error")
+        print(serializer.data,"djklsfklsdklfjlsdjflsdkfjlsfjlsdjflajsldj l jsd fjadisjfiosjdofj djffjiodj")
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+       
+       
+api_view(['PATCH'])    
+def Waste_patch( request, pk):
+    try:
+        waste = WasteCategory.objects.get(pk=pk)
+        serializer = WasteCategorySerializer(waste, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except APIException as e:
+        return Response(
+                {'Waste_except': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
 class WasteListAPIView(APIView):
     def get(self, request):
         print('im here')
@@ -85,3 +133,33 @@ def WasteEditAPIView(request, pk):
             )
             
             
+            
+
+class WasteView(APIView):
+
+    def get(self,request):
+        try:
+            category = Waste.objects.all()
+            serializer = WasteSerializer(category,many=True)
+            return Response(serializer.data)
+        except APIException as e:
+            return Response(
+                {'Waste_except': str(e)},
+                 status=status.HTTP_400_BAD_REQUEST
+            )
+    def post(self,request):
+        print('im here da')
+        try:
+            serializer = WasteSerializer(data = request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data,status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except APIException as e:
+            return Response(
+                {'waste_error': str(e)},
+                 status=status.HTTP_400_BAD_REQUEST
+            )
+
+
+

@@ -57,7 +57,7 @@ class OrderDetailAPIView(APIView):
             print(order,"after")
             if 1<9:
                 return Response("aa yeah")
-            serializer = OrderSerializer(data=order)
+            serializer = OrderSerializer(data=order) 
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)

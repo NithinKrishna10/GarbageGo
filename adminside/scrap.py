@@ -24,6 +24,7 @@ class ScrapAPIView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
+        print(request.data)
         serializer = ScrapSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

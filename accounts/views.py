@@ -16,8 +16,7 @@ class RegisterView(APIView):
      
     @extend_schema(
     responses=UserSerializer,
-    request=UserSerializer,  
-)
+    request=UserSerializer,  )
     @extend_schema(responses=UserSerializer)
     def post(self, request):
         try:

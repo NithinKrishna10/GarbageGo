@@ -3,7 +3,7 @@ from .views import RegisterView, LoginView, UserView, LogoutView,UserApi
 from . import views
 from . import scrap
 from .orders import OrderDetailAPIView,OrderListAPIView
-from .waste import WasteListAPIView,WasteCategoryView,WasteEditAPIView
+from .waste import WasteListAPIView,WasteCategoryView,WasteCategoryEdit
 from . import waste
 from .scrap import *
 
@@ -31,7 +31,8 @@ urlpatterns = [
 
     path('waste-categories/', WasteCategoryView.as_view(), name='waste-category-list'),
     path('waste-list/', WasteListAPIView.as_view(), name='waste-list'),
-    path('waste-edit/<int:pk>/', waste.WasteEditAPIView, name='waste-edit'),
+    path('waste-edit/<int:pk>/', WasteCategoryEdit.as_view(), name='waste-edit'),
+        path('waste-patch/<int:pk>/',waste.Waste_patch, name='waste-patch'),
 
 # Scrap Section
 
