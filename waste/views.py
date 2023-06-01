@@ -27,10 +27,3 @@ class WasteAPIView(APIView):
         serializer = WasteSerializer(wastes, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = WasteSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
-

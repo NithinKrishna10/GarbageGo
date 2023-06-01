@@ -7,6 +7,8 @@ class WasteCategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class WasteSerializer(serializers.ModelSerializer):
+    category = WasteCategorySerializer()
+    
     class Meta:
         model = Waste
         fields = '__all__'

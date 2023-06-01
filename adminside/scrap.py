@@ -29,6 +29,7 @@ class ScrapAPIView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ScrapCategoryDetailAPIView(APIView):
@@ -69,25 +70,30 @@ class ScrapDetailAPIView(APIView):
         except Scrap.DoesNotExist:
             return None
 
+   
     def get(self, request, pk):
-        scrap = self.get_scrap(pk)
-        if not scrap:
+        print("this is pk",pk)
+        try:
+            scrap = Scrap.objects.get(id=pk)
+            scrap_serializer = ScrapSerializer(scrap, many=False)
+            return Response(scrap_serializer.data)
+        except Scrap.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = ScrapSerializer(scrap)
-        return Response(serializer.data)
+        
 
     def patch(self, request, pk):
-        scrap = self.get_scrap(pk)
+        scrap = Scrap.objects.get(id=pk)
         if not scrap:
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = ScrapSerializer(scrap, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        print(serializer.errors,"this is the fucking errors")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        scrap = self.get_scrap(pk)
+        scrap = Scrap.objects.get(id=pk)
         if not scrap:
             return Response(status=status.HTTP_404_NOT_FOUND)
         scrap.delete()

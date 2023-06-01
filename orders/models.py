@@ -21,13 +21,16 @@ class Order(models.Model):
     additional_notes = models.TextField(blank=True)
     is_ordered = models.BooleanField(default=False)
     waste_weight = models.DecimalField(max_digits=10, decimal_places=2,default=0)
+    waste_weight = models.DecimalField(max_digits=10, decimal_places=2,default=0)
+    
     price = models.DecimalField(max_digits=10, decimal_places=2,default=0)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES,default='Booked')
     def __str__(self):
         return f"Order #{self.pk} - {self.customer.name}"
 
 
-
+class Order_details(models.Model):
+    order_id = models.ForeignKey(Order,on_delete=models.CASCADE)
 
 
 

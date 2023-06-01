@@ -3,7 +3,7 @@ from .views import RegisterView, LoginView, UserView, LogoutView,UserApi
 from . import views
 from . import scrap
 from .orders import OrderDetailAPIView,OrderListAPIView
-from .waste import WasteListAPIView,WasteCategoryView,WasteCategoryEdit
+from .waste import WasteListAPIView,WasteCategoryView,WasteCategoryEdit,WasteEditView
 from . import waste
 from .scrap import *
 
@@ -30,16 +30,14 @@ urlpatterns = [
 #  Waste Section
 
     path('waste-categories/', WasteCategoryView.as_view(), name='waste-category-list'),
-    path('waste-list/', WasteListAPIView.as_view(), name='waste-list'),
     path('waste-edit/<int:pk>/', WasteCategoryEdit.as_view(), name='waste-edit'),
-        path('waste-patch/<int:pk>/',waste.Waste_patch, name='waste-patch'),
+    path('waste-list/', WasteListAPIView.as_view(), name='waste-list'),
+    path('waste-patch/<int:pk>/',WasteEditView.as_view(), name='waste-patch'),
 
 # Scrap Section
 
     path('scrap-categories/', ScrapCategoryAPIView.as_view(), name='scrap-category-list'),
     path('scrap-categories/<int:pk>/', ScrapCategoryDetailAPIView.as_view(), name='scrap-category-detail'),
     path('scraps/', ScrapAPIView.as_view(), name='scrap-list'),
-    path('scraps/<int:pk>/', ScrapDetailAPIView.as_view(), name='scrap-detail'),
-    
-
+    path('scrapss/<int:pk>/', ScrapDetailAPIView.as_view(), name='scrap-detail'),
 ]
