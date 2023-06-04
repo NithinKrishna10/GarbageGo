@@ -10,7 +10,9 @@ from accounts.models import User
 import jwt , datetime
 from rest_framework.decorators import api_view
 from drf_spectacular.utils import extend_schema
-# Create your views here.
+from rest_framework.exceptions import APIException
+
+
 class RegisterView(APIView):
     @extend_schema(responses=UserSerializer)
     def post(self, request):
@@ -19,69 +21,120 @@ class RegisterView(APIView):
         serializer.save()
         return Response(serializer.data)
 
+
+
 class LoginView(APIView):
-    @extend_schema(responses=UserSerializer)
+   
+ 
+    
     def post(self, request):
-        email = request.data['email']
-        password = request.data['password']
-
+        print("hai Login View")
+        try:
+            email = request.data['email']
+            password = request.data['password']
+            print(password)
+        except:
+            return Response({'status':'Please provide the mentioned details'})
         user = User.objects.filter(email=email).first()
+        print(user.password)
+        try:
+            user = User.objects.get(email=email)
+            print(user)
+            if not user.check_password(password):
+                Response({'status':'Password is incorrect'})
+            if not user.is_admin:
+                Response({'status':'User not admin'})
+                
+            if user is not None:
+                # user = LoginSerializer(user)
+                print('kkkkkkkkkkkk')
+                payload = {
+                        'id': user.id,
+                        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
+                        'iat': datetime.datetime.utcnow(),
+                        'name' : user.name
+                    }
+                userdetails ={
+                    'name': user.name,
+                    'email' : user.email,
+                }
 
-        if user is None:
-            raise AuthenticationFailed('User not found!')
-
-        if not user.check_password(password):
-            raise AuthenticationFailed('Incorrect password!')
-        
-        if user.is_superuser is False:
-            raise AuthenticationFailed('User not found!')
-
-        payload = {
-            'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-            'iat': datetime.datetime.utcnow()
-        }
-
-        token = jwt.encode(payload, 'secret', algorithm='HS256')
-
-
-        response = Response()
-
-        response.set_cookie(key='jwt', value=token, httponly=True)
-        response.data = {
-            'jwt': token
-        }
-        return response
-
+                token = jwt.encode(payload, 'secret', algorithm='HS256')
+ 
+                print(token,"toooooooooooken")
+                return Response({'status' : "Success",'payload' : payload ,'admin_jwt': token,'admin':userdetails})
+        except:
+            if User.DoesNotExist:
+                return Response("Email or Password is Wrong") 
+            
 
 class UserView(APIView):
     JWT_SECRET = 'secret'
     JWT_ALGORITHM = 'HS256'
+
     @extend_schema(responses=UserSerializer)
     def get(self, request):
-        print(request)
         token = request.COOKIES.get('jwt')
-        print(token)
         if not token:
             raise AuthenticationFailed('Unauthenticated!')
 
         try:
             payload = jwt.decode(token, self.JWT_SECRET, algorithms=[self.JWT_ALGORITHM])
-            print(payload)
         except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated!')
+            raise AuthenticationFailed('Token expired!')
 
         user = User.objects.filter(id=payload['id']).first()
+
+        if not user:
+            raise AuthenticationFailed('User not found!')
+
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
+
+
+  
+@api_view(['GET'])
+@extend_schema(responses=UserSerializer)   
+def verify_token(request):
+    try:
+        token = request.headers.get('Authorization')
+
+        # print("###################################",token,'############################################')
+        decoded = jwt.decode(token, 'secret', algorithms='HS256')
+        # print(decoded)
+        # print(decoded.get('id'),'Yes iam back////.......')
+        id = decoded.get('id')
+        user = User.objects.get(id=id)
+     
+       
+
+        if user:
+            # userdetails = UserSerializer(user,many=False)
+            userdetails ={
+                        'id':user.id,
+                        'name': user.name,
+                        'email' : user.email,
+                        
+                    }
+        
+            return Response({'admin':userdetails})
+        else:
+            return Response({'status' : 'Token Invalid'})
+    except APIException as e:
+        return Response(
+                {
+                    'verify_errors': str(e)
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 class LogoutView(APIView):
     def post(self, request):
         response = Response()
         response.delete_cookie('jwt')
         response.data = {
-            'message': 'success'
+            'message': 'Logout successful'
         }
         return response
     
@@ -138,121 +191,3 @@ def unblock_user(request, id):
 
 
 
-
-#  ============================= Scrap ==========================================
-
-from services.models import Category
-
-@api_view(['GET', 'POST'])
-def category_list(request):
-    if request.method == 'GET':
-        categories = Category.objects.all()
-        serializer = CategorySerializer(categories, many=True)
-        return Response(serializer.data)
-
-    elif request.method == 'POST':
-        serializer = CategorySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def category_detail(request, pk):
-    try:
-        category = Category.objects.get(pk=pk)
-    except Category.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = CategorySerializer(category)
-        return Response(serializer.data)
-
-    elif request.method == 'PUT':
-        serializer = CategorySerializer(category, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        category.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    
-
-
-from rest_framework import serializers
-from services.models import Scrap, Category,Waste
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ['id', 'name']
-
-class ScrapSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
-
-    class Meta:
-        model = Scrap
-        fields = ['id', 'name', 'category', 'description', 'weight', 'price', 'image']
-        read_only_fields = ['id']
-
-    def create(self, validated_data):
-        category_data = validated_data.pop('category')
-        category = Category.objects.get(id=category_data['id'])
-        scrap = Scrap.objects.create(category=category, **validated_data)
-        return scrap
-
-    def update(self, instance, validated_data):
-        category_data = validated_data.pop('category')
-        category = Category.objects.get(id=category_data['id'])
-        instance.name = validated_data.get('name', instance.name)
-        instance.category = category
-        instance.description = validated_data.get('description', instance.description)
-        instance.weight = validated_data.get('weight', instance.weight)
-        instance.price = validated_data.get('price', instance.price)
-        instance.image = validated_data.get('image', instance.image)
-        instance.save()
-        return instance
-
-
-@api_view(['POST'])
-def create_scrap(request):
-    serializer = ScrapSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# ############################################################
-@api_view(['GET'])
-def list_scraps(request):
-    scraps = Scrap.objects.all()
-    serializer = ScrapSerializer(scraps, many=True)
-    return Response(serializer.data)
-
-@api_view(['PUT'])
-def update_scrap(request, pk):
-    try:
-        scrap = Scrap.objects.get(pk=pk)
-    except Scrap.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    serializer = ScrapSerializer(scrap, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['DELETE'])
-def delete_scrap(request, pk):
-    try:
-        scrap = Scrap.objects.get(pk=pk)
-    except Scrap.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    scrap.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)

@@ -1,8 +1,9 @@
 from django.db import models
 from waste.models import Waste,WasteCategory
 from accounts.models import Address,User
+import datetime
 # Create your models here.
-
+current_date = datetime.date.today()
 
 
     # quantity = models.PositiveIntegerField()
@@ -25,6 +26,10 @@ class Order(models.Model):
     
     price = models.DecimalField(max_digits=10, decimal_places=2,default=0)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES,default='Booked')
+    Order_day  = models.IntegerField(default = current_date.day)
+    Order_month  = models.IntegerField(default = current_date.month)
+    Order_year  = models.IntegerField(default = current_date.year)
+
     def __str__(self):
         return f"Order #{self.pk} - {self.customer.name}"
 

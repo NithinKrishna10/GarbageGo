@@ -7,6 +7,8 @@ from .waste import WasteListAPIView,WasteCategoryView,WasteCategoryEdit,WasteEdi
 from . import waste
 from .scrap import *
 
+from .blog import PostDetailView,PostView,PostCategoryView,PostTagView
+
 urlpatterns = [
     path('register', RegisterView.as_view()),
     path('login', LoginView.as_view()),
@@ -16,7 +18,7 @@ urlpatterns = [
     path('userapi',UserApi.as_view()),
     path('block_user/<int:id>/', views.block_user, name='block_user'),
     path('unblock_user/<int:id>/', views.unblock_user, name='block_user'),
-    path('addcat',views.category_list,name="addcat"),
+  
 
 
     # path('scraps/<int:pk>/', ScrapRetrieveUpdateDestroyAPIView.as_view(), name='scrap-detail'),   
@@ -40,4 +42,12 @@ urlpatterns = [
     path('scrap-categories/<int:pk>/', ScrapCategoryDetailAPIView.as_view(), name='scrap-category-detail'),
     path('scraps/', ScrapAPIView.as_view(), name='scrap-list'),
     path('scrapss/<int:pk>/', ScrapDetailAPIView.as_view(), name='scrap-detail'),
+    
+    
+# Blog Section
+
+    path('posts/', PostView.as_view(), name='post-list'),
+    path('posts/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
+    path('post-tags' , PostTagView.as_view(),name='tag' ),
+    path('post-categories/',PostCategoryView.as_view(),name="post-category")
 ]

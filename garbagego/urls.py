@@ -38,7 +38,8 @@ urlpatterns = [
     path('order',include('orders.urls')),
     path('place',PlaceOrderAPIView.as_view()),
     path('waste/',include('waste.urls')),
-     path('scrap/',include('scrap.urls')),
+    path('scrap/',include('scrap.urls')),
+    path('blog/',include('blog.urls')),
 
 ]
 if settings.DEBUG:
