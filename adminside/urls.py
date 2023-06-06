@@ -9,8 +9,8 @@ from .scrap import *
 
 from .blog import PostDetailView,PostView,PostCategoryView,PostTagView
 from .pickup import PickupRequestListCreateAPIView, PickupRequestRetrieveUpdateDestroyAPIView,PickupItemsView,PickupDetailItemsView
-
-
+from . import dashboard
+from .dashboard import PickupStatsView,DailyPickupListAPIView
 urlpatterns = [
     path('register', RegisterView.as_view()),
     path('login', LoginView.as_view()),
@@ -58,5 +58,12 @@ urlpatterns = [
     path('posts/', PostView.as_view(), name='post-list'),
     path('posts/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     path('post-tags' , PostTagView.as_view(),name='tag' ),
-    path('post-categories/',PostCategoryView.as_view(),name="post-category")
+    path('post-categories/',PostCategoryView.as_view(),name="post-category"),
+    
+    
+# Dashboard
+    path('dash',dashboard.pickup_stats,name='ps'),
+     path('pickup-stats/',PickupStatsView.as_view(), name='pickup-stats'),
+       path('daily-pickups/', DailyPickupListAPIView.as_view(), name='daily-pickups'),
+     path('monthly-pickups/', dashboard.monthly_pickup_data, name='monthly_pickups'),
 ]

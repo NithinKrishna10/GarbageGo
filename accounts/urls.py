@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import RegisterView, LoginView, UserView, LogoutView,AddressListAPIView,DistrictListAPIView,CityListAPIView,AddressPostAPIView,OrderListAPIView,CustomerPickupRequestAPIView
 from . import views
+from . import dashboard
 urlpatterns = [
     path('register', RegisterView.as_view()),
     path('login', LoginView.as_view()),
@@ -15,4 +16,8 @@ urlpatterns = [
     path('orders/<int:pk>/', OrderListAPIView.as_view(), name='order-detail'),
     
      path('customer-pickup-requests/<int:customer_id>/', CustomerPickupRequestAPIView.as_view(), name='customer-pickup-requests'),
+     
+      
+    #   Dash
+    path('dash/<int:id>/',dashboard.userdash,name="hai")
 ]

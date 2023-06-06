@@ -21,9 +21,9 @@ class PickupRequest(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2,default=50)
     special_instructions = models.TextField(blank=True)
     pickup_status = models.CharField(max_length=20, default='pending')
-    Order_day  = models.IntegerField(default = current_date.day)
-    Order_month  = models.IntegerField(default = current_date.month)
-    Order_year  = models.IntegerField(default = current_date.year)
+    pickup_day  = models.IntegerField(default = current_date.day)
+    pickup_month  = models.IntegerField(default = current_date.month)
+    pickup_year  = models.IntegerField(default = current_date.year)
 
     def __str__(self):
         return f"PickupRequest - {self.pk}"
