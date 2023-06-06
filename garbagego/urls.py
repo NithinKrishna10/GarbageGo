@@ -40,6 +40,7 @@ urlpatterns = [
     path('waste/',include('waste.urls')),
     path('scrap/',include('scrap.urls')),
     path('blog/',include('blog.urls')),
+    path('pickup/',include('pickup.urls')),
 
 ]
 if settings.DEBUG:

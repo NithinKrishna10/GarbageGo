@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'waste',
     'orders',
     'blog',
+    'pickup',
 ]
 
 MIDDLEWARE = [

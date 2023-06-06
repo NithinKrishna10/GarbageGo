@@ -10,26 +10,7 @@ from .models import *
 
 
 
-
-# class PlaceOrderAPIView(APIView):
-#     def post(self, request):
-#         order_serializer = OrderSerializer(data=request.data)
-
-#         if order_serializer.is_valid():
-#             order = order_serializer.save()
-           
-#             return Response(
-#                 {
-#                     'order': order_serializer.data
-#                 },
-#                 status=status.HTTP_201_CREATED
-#             )
-#         return Response(
-#             {
-#                 'order_errors': order_serializer.errors
-#             },
-#             status=status.HTTP_400_BAD_REQUEST
-#         )
+    
 
 class PlaceOrderAPIView(APIView):
     def post(self, request):

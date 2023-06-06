@@ -4,7 +4,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer ,LoginSerializer,LoginDetailsSerializer,AddressSerializer,CitySerializer,DistrictSerializer,AddressPostSerializer
+from .serializers import UserSerializer ,LoginSerializer,LoginDetailsSerializer,AddressSerializer,CitySerializer,DistrictSerializer,AddressPostSerializer,PickupSerializer
 from .models import User,Address,City,District
 import jwt , datetime
 from rest_framework import permissions, status
@@ -261,3 +261,16 @@ class OrderListAPIView(APIView):
                 {'OrderList except': str(e)},
                  status=status.HTTP_400_BAD_REQUEST
             )
+            
+            
+from pickup.models import PickupRequest
+
+
+class CustomerPickupRequestAPIView(APIView):
+    def get(self, request, customer_id):
+        try:
+            pickup_requests = PickupRequest.objects.filter(customer_id=customer_id)
+            serializer = PickupSerializer(pickup_requests, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

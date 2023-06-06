@@ -51,3 +51,13 @@ class AddressPostSerializer(ModelSerializer):
     class Meta:
         model = Address
         fields = '__all__'
+
+from pickup.models import PickupRequest
+
+class PickupSerializer(ModelSerializer):
+    customer = UserSerializer()
+    pickup_address = AddressSerializer()
+    
+    class Meta:
+        model = PickupRequest
+        fields = '__all__'

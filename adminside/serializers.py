@@ -79,3 +79,21 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
+        
+from pickup.models import PickupRequest
+
+class PickupSerializer(serializers.ModelSerializer):
+ 
+    customer = UserSerializer()
+    pickup_address = AddressSerializer()
+
+    def get_costomer_name(self,obj):
+        return obj.customer.name
+    
+    def get_address(self,obj):
+        return obj.address
+
+    
+    class Meta:
+        model = PickupRequest
+        fields = '__all__'

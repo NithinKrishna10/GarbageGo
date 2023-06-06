@@ -8,6 +8,8 @@ from . import waste
 from .scrap import *
 
 from .blog import PostDetailView,PostView,PostCategoryView,PostTagView
+from .pickup import PickupRequestListCreateAPIView, PickupRequestRetrieveUpdateDestroyAPIView,PickupItemsView,PickupDetailItemsView
+
 
 urlpatterns = [
     path('register', RegisterView.as_view()),
@@ -42,7 +44,14 @@ urlpatterns = [
     path('scrap-categories/<int:pk>/', ScrapCategoryDetailAPIView.as_view(), name='scrap-category-detail'),
     path('scraps/', ScrapAPIView.as_view(), name='scrap-list'),
     path('scrapss/<int:pk>/', ScrapDetailAPIView.as_view(), name='scrap-detail'),
-    
+
+# Picku Section
+
+
+    path('pickup-requests/', PickupRequestListCreateAPIView.as_view(), name='pickup_request_list_create'),
+    path('pickup-request/<int:pk>/', PickupRequestRetrieveUpdateDestroyAPIView.as_view(), name='pickup_request_retrieve_update_destroy'),
+    path('pickup-item',PickupItemsView.as_view(),name="pickup_items"),
+    path('pickupitem/<int:pk>/',PickupDetailItemsView.as_view(),name="pickup_item"),
     
 # Blog Section
 
