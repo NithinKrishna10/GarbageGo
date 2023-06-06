@@ -9,3 +9,24 @@ class ScrapAPIView(APIView):
         scraps = Scrap.objects.all()
         serializer = ScrapSerializer(scraps, many=True)
         return Response(serializer.data)
+
+
+
+# /home/ubuntu/env/bin
+# /home/ubuntu/GarbageGo
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+
+
