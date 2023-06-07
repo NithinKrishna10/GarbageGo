@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .serializers import ScrapCategorySerializer, ScrapSerializer
 from scrap.models import ScrapCategory, Scrap
 
+
 class ScrapCategoryAPIView(APIView):
     def get(self, request):
         categories = ScrapCategory.objects.all()
@@ -17,6 +18,7 @@ class ScrapCategoryAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ScrapAPIView(APIView):
     def get(self, request):
         scraps = Scrap.objects.all()
@@ -24,13 +26,12 @@ class ScrapAPIView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        print(request.data)
         serializer = ScrapSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ScrapCategoryDetailAPIView(APIView):
     def get_category(self, pk):
@@ -50,7 +51,8 @@ class ScrapCategoryDetailAPIView(APIView):
         category = self.get_category(pk)
         if not category:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = ScrapCategorySerializer(category, data=request.data, partial=True)
+        serializer = ScrapCategorySerializer(
+            category, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -63,6 +65,7 @@ class ScrapCategoryDetailAPIView(APIView):
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class ScrapDetailAPIView(APIView):
     def get_scrap(self, pk):
         try:
@@ -70,16 +73,13 @@ class ScrapDetailAPIView(APIView):
         except Scrap.DoesNotExist:
             return None
 
-   
     def get(self, request, pk):
-        print("this is pk",pk)
         try:
             scrap = Scrap.objects.get(id=pk)
             scrap_serializer = ScrapSerializer(scrap, many=False)
             return Response(scrap_serializer.data)
         except Scrap.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
 
     def patch(self, request, pk):
         scrap = Scrap.objects.get(id=pk)
@@ -89,7 +89,6 @@ class ScrapDetailAPIView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        print(serializer.errors,"this is the fucking errors")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):

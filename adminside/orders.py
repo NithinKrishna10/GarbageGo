@@ -5,7 +5,6 @@ from .serializers import OrderSerializer
 from orders.models import Order
 
 
-
 #  customer = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
 #     waste_type = models.ForeignKey(WasteCategory,on_delete=models.CASCADE)
 #     address = models.ForeignKey(Address,on_delete=models.CASCADE)
@@ -48,16 +47,13 @@ class OrderDetailAPIView(APIView):
         try:
 
             order = self.get_object(pk)
-            print(order,"before")
-            print(request.data['additional_notes'])
             order.price = request.data['price']
-            order.status =request.data['status']
-            order.waste_weight=request.data['waste_weight']
+            order.status = request.data['status']
+            order.waste_weight = request.data['waste_weight']
             order.save()
-            print(order,"after")
-            if 1<9:
+            if 1 < 9:
                 return Response("aa yeah")
-            serializer = OrderSerializer(data=order) 
+            serializer = OrderSerializer(data=order)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
@@ -66,8 +62,7 @@ class OrderDetailAPIView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        
+
         order = self.get_object(pk)
         order.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-

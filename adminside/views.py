@@ -4,10 +4,11 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from .serializers import UserSerializer,UserCreateSerializer
+from .serializers import UserSerializer, UserCreateSerializer
 from rest_framework import status
 from accounts.models import User
-import jwt , datetime
+import jwt
+import datetime
 from rest_framework.decorators import api_view
 from drf_spectacular.utils import extend_schema
 from rest_framework.exceptions import APIException
@@ -22,51 +23,42 @@ class RegisterView(APIView):
         return Response(serializer.data)
 
 
-
 class LoginView(APIView):
-   
- 
-    
+
     def post(self, request):
-        print("hai Login View")
         try:
             email = request.data['email']
             password = request.data['password']
-            print(password)
         except:
-            return Response({'status':'Please provide the mentioned details'})
+            return Response({'status': 'Please provide the mentioned details'})
         user = User.objects.filter(email=email).first()
-        print(user.password)
         try:
             user = User.objects.get(email=email)
-            print(user)
             if not user.check_password(password):
-                Response({'status':'Password is incorrect'})
-            if not user.is_admin:
-                Response({'status':'User not admin'})
-                
+                Response({'status': 'Password is incorrect'})
+            if user.is_admin==False:
+                Response({'status': 'User not admin'})
+
             if user is not None:
                 # user = LoginSerializer(user)
-                print('kkkkkkkkkkkk')
                 payload = {
-                        'id': user.id,
-                        'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
-                        'iat': datetime.datetime.utcnow(),
-                        'name' : user.name
-                    }
-                userdetails ={
+                    'id': user.id,
+                    'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
+                    'iat': datetime.datetime.utcnow(),
+                    'name': user.name
+                }
+                userdetails = {
                     'name': user.name,
-                    'email' : user.email,
+                    'email': user.email,
                 }
 
                 token = jwt.encode(payload, 'secret', algorithm='HS256')
- 
-                print(token,"toooooooooooken")
-                return Response({'status' : "Success",'payload' : payload ,'admin_jwt': token,'admin':userdetails})
+
+                return Response({'status': "Success", 'payload': payload, 'admin_jwt': token, 'admin': userdetails},status=status.HTTP_200_OK)
         except:
             if User.DoesNotExist:
-                return Response("Email or Password is Wrong") 
-            
+                return Response("Email or Password is Wrong")
+
 
 class UserView(APIView):
     JWT_SECRET = 'secret'
@@ -79,7 +71,8 @@ class UserView(APIView):
             raise AuthenticationFailed('Unauthenticated!')
 
         try:
-            payload = jwt.decode(token, self.JWT_SECRET, algorithms=[self.JWT_ALGORITHM])
+            payload = jwt.decode(token, self.JWT_SECRET,
+                                 algorithms=[self.JWT_ALGORITHM])
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed('Token expired!')
 
@@ -92,42 +85,36 @@ class UserView(APIView):
         return Response(serializer.data)
 
 
-
-  
 @api_view(['GET'])
-@extend_schema(responses=UserSerializer)   
+@extend_schema(responses=UserSerializer)
 def verify_token(request):
     try:
         token = request.headers.get('Authorization')
 
-        # print("###################################",token,'############################################')
         decoded = jwt.decode(token, 'secret', algorithms='HS256')
-        # print(decoded)
-        # print(decoded.get('id'),'Yes iam back////.......')
         id = decoded.get('id')
         user = User.objects.get(id=id)
-     
-       
 
         if user:
             # userdetails = UserSerializer(user,many=False)
-            userdetails ={
-                        'id':user.id,
-                        'name': user.name,
-                        'email' : user.email,
-                        
-                    }
-        
-            return Response({'admin':userdetails})
+            userdetails = {
+                'id': user.id,
+                'name': user.name,
+                'email': user.email,
+
+            }
+
+            return Response({'admin': userdetails})
         else:
-            return Response({'status' : 'Token Invalid'})
+            return Response({'status': 'Token Invalid'})
     except APIException as e:
         return Response(
-                {
-                    'verify_errors': str(e)
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            {
+                'verify_errors': str(e)
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
 
 class LogoutView(APIView):
     def post(self, request):
@@ -137,40 +124,34 @@ class LogoutView(APIView):
             'message': 'Logout successful'
         }
         return response
-    
+
+
 class UserApi(APIView):
 
     @extend_schema(responses=UserSerializer)
-    def get(request,id):
-        print("had")
+    def get(request, id):
         user = User.objects.all()
-        print(user)
-        serializer = UserSerializer(user,many=True)
-        print(serializer.data)
+        serializer = UserSerializer(user, many=True)
         return Response(serializer.data)
 
-
-
-    def patch(request,id):
+    def patch(request, id):
         user = User.objects.get(id=id)
         user.full_name = request.data["username"]
         user.email = request.data["email"]
         user.save()
         return Response("User Updated")
 
-
-    def delete(request,id):
+    def delete(request, id):
         user = User.objects.get(id=id)
         user.delete()
         return Response("User deleted")
-    
+
 
 @api_view(['GET'])
 @extend_schema(responses=UserSerializer)
 def userlist(request):
     user = User.objects.all()
-    serializer = UserCreateSerializer(user,many=True)
-    # print(serializer.data)
+    serializer = UserCreateSerializer(user, many=True)
     return Response(serializer.data)
 
 
@@ -181,13 +162,10 @@ def block_user(request, id):
     user.save()
     return Response({'status': 'blocked'})
 
+
 @api_view(['PATCH'])
 def unblock_user(request, id):
     user = User.objects.get(id=id)
-    print(user)
     user.is_active = True
     user.save()
     return Response({'status': 'blocked'})
-
-
-

@@ -5,8 +5,9 @@ from .models import WasteCategory, Waste
 from .serializers import WasteCategorySerializer, WasteSerializer
 
 
-
 extend_schema(responses=WasteCategorySerializer)
+
+
 class WasteCategoryAPIView(APIView):
     def get(self, request):
         waste_categories = WasteCategory.objects.all()
@@ -20,10 +21,12 @@ class WasteCategoryAPIView(APIView):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
+
 extend_schema(responses=WasteSerializer)
+
+
 class WasteAPIView(APIView):
     def get(self, request):
         wastes = Waste.objects.all()
         serializer = WasteSerializer(wastes, many=True)
         return Response(serializer.data)
-

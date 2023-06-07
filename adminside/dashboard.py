@@ -1,7 +1,13 @@
 # serializers.py
+from rest_framework.generics import ListAPIView
+from django.db.models import Count
+from datetime import datetime
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from rest_framework import serializers
 from pickup.models import PickupRequest
 from rest_framework.views import APIView
+
 
 class PickupStatsSerializer(serializers.Serializer):
     monthly_pickups = serializers.IntegerField()
@@ -10,9 +16,7 @@ class PickupStatsSerializer(serializers.Serializer):
 
 
 # views.py
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from datetime import datetime
+
 
 @api_view(['GET'])
 def pickup_stats(request):
@@ -41,34 +45,35 @@ def pickup_stats(request):
 
         serializer = PickupStatsSerializer(data)
         return Response(serializer.data)
-from rest_framework.generics import ListAPIView
-from rest_framework import serializers
-from django.db.models import Count
+
+
 class YearlyPickupSerializer(serializers.Serializer):
     month = serializers.IntegerField()
     count = serializers.IntegerField()
-    
-    
+
+
 class PickupStatsView(APIView):
     def get(self, request, format=None):
-        yearly_stats = PickupRequest.objects.values('pickup_month').annotate(count=Count('pk'))
+        yearly_stats = PickupRequest.objects.values(
+            'pickup_month').annotate(count=Count('pk'))
         serialized_stats = YearlyPickupSerializer(yearly_stats, many=True)
         return Response(serialized_stats.data)
-    
-    
+
+
 class DailyPickupSerializer(serializers.ModelSerializer):
     class Meta:
         model = PickupRequest
         fields = ('pickup_date', 'weight')
-        
+
+
 class DailyPickupListAPIView(ListAPIView):
     queryset = PickupRequest.objects.all()
     serializer_class = DailyPickupSerializer
     filterset_fields = ('pickup_date',)
-    
 
 
 @api_view(['GET'])
 def monthly_pickup_data(request):
-    monthly_data = PickupRequest.objects.values('pickup_month').annotate(count=Count('id'))
+    monthly_data = PickupRequest.objects.values(
+        'pickup_month').annotate(count=Count('id'))
     return Response(list(monthly_data))
