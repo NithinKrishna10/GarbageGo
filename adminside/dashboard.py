@@ -1,13 +1,14 @@
 # serializers.py
 from rest_framework.generics import ListAPIView
-from django.db.models import Count
+from django.db.models import Sum, Count
 from datetime import datetime
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import serializers
 from pickup.models import PickupRequest
 from rest_framework.views import APIView
-
+from datetime import datetime
+current_date = datetime.now()
 
 class PickupStatsSerializer(serializers.Serializer):
     monthly_pickups = serializers.IntegerField()
@@ -77,3 +78,75 @@ def monthly_pickup_data(request):
     monthly_data = PickupRequest.objects.values(
         'pickup_month').annotate(count=Count('id'))
     return Response(list(monthly_data))
+
+
+@api_view(['GET'])
+def admindash(request):
+
+    try:
+        pickup_count = PickupRequest.objects.all().count()
+    except:
+        pickup_count=0
+    
+ 
+   
+    
+   
+    
+    try:
+        scrap_weight = PickupRequest.objects.filter(
+            pickup_type='Scrap',
+            pickup_month=current_date.month
+        ).aggregate(total_weight=Sum('weight'))['total_weight'] or 0
+       
+    except:
+        scrap_weight = 0
+        
+    try:
+        scrap_price = PickupRequest.objects.filter(
+      
+            pickup_type='Scrap',
+            pickup_month=current_date.month
+        ).aggregate(total_weight=Sum('price'))['total_weight'] or 0
+        # print(scrap_price,"================================")
+    except:
+        scrap_price= 0
+    # Get the total weight of monthly coll===============ected waste
+    try:
+        waste_weight = PickupRequest.objects.filter(
+
+            pickup_type='Waste',
+            pickup_month=current_date.month
+        ).aggregate(total_weight=Sum('weight'))['total_weight'] or 0
+    except:
+        waste_weight = 0
+
+    try:
+        waste_price = PickupRequest.objects.filter(
+      
+            pickup_type='Waste',
+            pickup_month=current_date.month
+        ).aggregate(total_weight=Sum('weight'))['total_weight'] or 0
+    except:
+        waste_price = 0
+
+
+    # Calculate the total weight of monthly collected scrap and waste
+    total_weight = scrap_weight + waste_weight
+
+    print("Monthly Collected Scrap Weight:", scrap_weight)
+    print("Monthly Collected Waste Weight:", waste_weight)
+    print("Total Monthly Weight:", total_weight)
+
+    payload = {
+        'waste_price': waste_price,
+        'scrap_price':scrap_price,
+        'pickup_count' : pickup_count,
+        'scrap_weight': scrap_weight,
+        'total_weight': total_weight,
+        'waste_weight': waste_weight,
+
+    }
+
+    return Response(payload)
+

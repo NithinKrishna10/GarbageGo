@@ -15,6 +15,7 @@ urlpatterns = [
     path('register', RegisterView.as_view()),
     path('login', LoginView.as_view()),
     path('user', UserView.as_view()),
+    path('verify_token',views.verify_token,name='verifytoken'),
     path('userlist',views.userlist),
     path('logout', LogoutView.as_view()),
     path('userapi',UserApi.as_view()),
@@ -62,7 +63,7 @@ urlpatterns = [
     
     
 # Dashboard
-    path('dash',dashboard.pickup_stats,name='ps'),
+    path('dash',dashboard.admindash,name='ps'),
      path('pickup-stats/',PickupStatsView.as_view(), name='pickup-stats'),
        path('daily-pickups/', DailyPickupListAPIView.as_view(), name='daily-pickups'),
      path('monthly-pickups/', dashboard.monthly_pickup_data, name='monthly_pickups'),

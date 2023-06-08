@@ -59,6 +59,7 @@ class LoginView(APIView):
         except:
             return Response({'status': 'Please provide the mentioned details'})
         user = User.objects.filter(email=email).first()
+        # print(user.password)
         try:
             user = User.objects.get(email=email)
             if not user.check_password(password):
@@ -194,7 +195,6 @@ class AddressPostAPIView(APIView):
 class DistrictListAPIView(APIView):
     def get(self, request):
         try:
-
             districts = District.objects.all()
             serializer = DistrictSerializer(districts, many=True)
             return Response(serializer.data)

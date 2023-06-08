@@ -20,10 +20,11 @@ urlpatterns = [
 
 
     #   Dash
-    path('dash/<int:pk>', dashboard.userdash, name="hai"),
+    path('dash/<int:pk>/', dashboard.userdash, name="hai"),
     path('monthly_pickup_count/', dashboard.monthly_pickup_count, name='monthly_pickup_count'),
     path('pickup_type_distribution/', dashboard.pickup_type_distribution, name='pickup_type_distribution'),
     path('daily_pickup_weight/', dashboard.daily_pickup_weight, name='daily_pickup_weight'),
     path('pickup_type_by_month/', dashboard.pickup_type_by_month, name='pickup_type_by_month'),
     path('pickup_weight_growth/', dashboard.pickup_weight_growth, name='pickup_weight_growth'),
+
 ]

@@ -70,3 +70,16 @@ class Address(models.Model):
 
     def __str__(self):
         return self.user.name
+
+
+
+class Achievement(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,default=None)
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    criteria = models.CharField(max_length=100)
+    # image = models.ImageField(upload_to='achievement_images/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

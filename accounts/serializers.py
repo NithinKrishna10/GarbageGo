@@ -1,6 +1,6 @@
-from pickup.models import PickupRequest
+from pickup.models import PickupRequest,PickupTracker
 from rest_framework.serializers import ModelSerializer
-from .models import User, Address, City, District
+from .models import User, Address, City, District,Achievement
 
 
 class UserSerializer(ModelSerializer):
@@ -67,4 +67,18 @@ class PickupSerializer(ModelSerializer):
 
     class Meta:
         model = PickupRequest
+        fields = '__all__'
+
+
+class AchievementSerializer(ModelSerializer):
+    
+    class Meta:
+        model = Achievement
+        fields = '__all__'
+        
+
+class PickupTrackerSerializer(ModelSerializer):
+    
+    class Meta:
+        model = PickupTracker
         fields = '__all__'

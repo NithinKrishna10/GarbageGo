@@ -2,7 +2,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import PickupRequest
+from .models import PickupRequest,PickupTracker
 from .serializers import PickupRequestSerializer
 
 
@@ -19,7 +19,20 @@ class PickupRequestListCreateAPIView(APIView):
         try:
             serializer = PickupRequestSerializer(data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                pickup_request = serializer.save()
+
+                # Update PickupTracker based on the pickup request
+                user = pickup_request.customer
+                pickup_type = pickup_request.pickup_type
+                weight = pickup_request.weight
+
+                pickup_tracker, _ = PickupTracker.objects.get_or_create(user=user)
+                if pickup_type == 'Scrap':
+                    pickup_tracker.scrap_weight += weight
+                elif pickup_type == 'Waste':
+                    pickup_tracker.waste_weight += weight
+                pickup_tracker.save()
+
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:

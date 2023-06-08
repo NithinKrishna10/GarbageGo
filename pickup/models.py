@@ -1,3 +1,4 @@
+from django.utils import timezone
 from accounts.models import User
 from django.db import models
 from accounts.models import Address
@@ -16,8 +17,8 @@ class PickupRequest(models.Model):
     pickup_type = models.CharField(max_length=10, choices=PICKUP_TYPE_CHOICES)
     pickup_date = models.DateField()
     pickup_address = models.ForeignKey(Address, on_delete=models.CASCADE)
-    pickup_latitude = models.FloatField(max_length= 50, blank=True, null=True)
-    pickup_longitude = models.FloatField(max_length= 50, blank=True, null=True)
+    pickup_latitude = models.FloatField(max_length=50, blank=True, null=True)
+    pickup_longitude = models.FloatField(max_length=50, blank=True, null=True)
     weight = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=50)
@@ -30,10 +31,18 @@ class PickupRequest(models.Model):
     def __str__(self):
         return f"PickupRequest - {self.pk}"
 
+
 class PickupTracker(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    scrap_weight = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    waste_weight = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    scrap_weight = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0)
+    waste_weight = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0)
+    month = models.IntegerField(default=timezone.now().month)
+    year = models.IntegerField(default=timezone.now().year)
+
+    def __str__(self):
+        return f"PickupTracker - {self.user.username}"
 
 
 class Item(models.Model):
@@ -70,5 +79,3 @@ class Invoice(models.Model):
 
     def __str__(self):
         return f"Invoice for PickupRequest - {self.pickup_request.pk}"
-
-

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'corsheaders',
     'drf_spectacular',
+    'django_apscheduler',
 
     # Installed Apps
     'accounts',
@@ -53,6 +55,7 @@ INSTALLED_APPS = [
     'orders',
     'blog',
     'pickup',
+    
 ]
 
 MIDDLEWARE = [
@@ -92,23 +95,23 @@ WSGI_APPLICATION = 'garbagego.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #         'ENGINE': 'django.db.backends.postgresql',
-    #         'NAME': 'myproject',
-    #         'USER' : 'myprojectuser',
-    #         'PASSWORD' : 'password',
-    #         'HOST' : 'localhost',
-    #         'PORT': '5432',
-    #     }
-
-
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'garbagego',
-        'USER': 'postgres',
-        'PASSWORD': '2002',
-        'HOST': 'localhost',
-    }
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'myproject',
+            'USER' : 'myprojectuser',
+            'PASSWORD' : 'password',
+            'HOST' : 'localhost',
+            'PORT': '5432',
+        }
+
+
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'garbagego',
+    #     'USER': 'postgres',
+    #     'PASSWORD': '2002',
+    #     'HOST': 'localhost',
+    # }
 
 }
 
@@ -151,9 +154,9 @@ STATIC_URL = 'static/'
 
 # Media settings (determines where images will be uploaded)
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -182,4 +185,10 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Django DRF Waste Management",
+}
+
+SCHEDULER_CONFIG = {
+    "apscheduler.jobstores.default": {
+        "type": "django",
+    },
 }
