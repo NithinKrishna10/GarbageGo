@@ -14,6 +14,7 @@ current_date = datetime.now()
 def userdash(request, pk):
     try:
         user = User.objects.get(id=pk)
+        assign_achievements(user)
     except User.DoesNotExist:
         raise Response("User not found.")
     try:
@@ -69,7 +70,7 @@ def userdash(request, pk):
         # print(scrap_price,"================================")
     except:
         scrap_price= 0
-    # Get the total weight of monthly coll===============ected waste
+
     try:
         waste_weight = PickupRequest.objects.filter(
 
@@ -89,7 +90,6 @@ def userdash(request, pk):
         waste_price = 0
 
 
-    # Calculate the total weight of monthly collected scrap and waste
     total_weight = scrap_weight + waste_weight
 
     print("Monthly Collected Scrap Weight:", scrap_weight)
@@ -140,7 +140,7 @@ def assign_achievements(user):
         total_weight=Sum('waste_weight'))['total_weight']
     if total_waste_weight <= 50:
         Achievement.objects.get_or_create(
-            user=user, name='Waste Warrior', description='You have recycled less than or equal to 50 kg of waste.', criteria='Recycle <= 50 kg of waste')
+            user=user, name='Waste Warrior', description='You have recycled less than 50 kg of waste.', criteria='Recycle <= 50 kg of waste')
 
     # Achievement 3: Monthly 10 pickups booked
     monthly_pickup_count = PickupRequest.objects.filter(customer=user).annotate(

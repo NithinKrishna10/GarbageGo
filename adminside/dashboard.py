@@ -131,7 +131,7 @@ def admindash(request):
         waste_price = 0
 
 
-    # Calculate the total weight of monthly collected scrap and waste
+
     total_weight = scrap_weight + waste_weight
 
     print("Monthly Collected Scrap Weight:", scrap_weight)

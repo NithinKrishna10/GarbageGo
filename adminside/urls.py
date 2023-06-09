@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import RegisterView, LoginView, UserView, LogoutView,UserApi
-from . import views
-from . import scrap
+from .import views
+from .import scrap
 from .orders import OrderDetailAPIView,OrderListAPIView
 from .waste import WasteListAPIView,WasteCategoryView,WasteCategoryEdit,WasteEditView
 from . import waste

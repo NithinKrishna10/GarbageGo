@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import RegisterView, LoginView, UserView, LogoutView, AddressListAPIView, DistrictListAPIView, CityListAPIView, AddressPostAPIView, OrderListAPIView, CustomerPickupRequestAPIView
-from . import views
-from . import dashboard
+from .import views
+from .import dashboard
 urlpatterns = [
     path('register', RegisterView.as_view()),
     path('login', LoginView.as_view()),

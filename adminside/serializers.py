@@ -5,7 +5,7 @@ from accounts.serializers import AddressSerializer
 from rest_framework.serializers import ModelSerializer
 from accounts.models import User
 from rest_framework import serializers
-from services.models import Category, Waste
+
 from orders.models import Order
 
 
