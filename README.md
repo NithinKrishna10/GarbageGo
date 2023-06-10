@@ -1,4 +1,4 @@
-# Project Name
+# GarbageGo
 
 Description: Our Waste Management Website is a modern and scalable platform developed using Python as the primary language for the backend and JavaScript for the frontend. The backend, powered by the Django Rest framework, provides a robust and secure foundation for managing waste-related data and operations. The frontend, built with React, offers a responsive and intuitive user interface.
 
@@ -26,30 +26,26 @@ Description: Our Waste Management Website is a modern and scalable platform deve
 
 ## Getting Started
 
-Clone the backend repository to your local machine:
 
-Create virtual environment python -m venv env
-
-Activate the virtual environment source env/Scripts/activate
-
-Navigate to the project directory:cd garbagego
-
-pip install -r requirements.txt
-
-Set up the database by configuring the PostgreSQL connection in the project's settings.py file.
-
-Apply database migrations: python manage.py migrate
-## Usage
-
-[Explain how to use your project or provide code examples]
-
-## Contributing
-
-[Provide guidelines for contributing to your project]
-
-## License
-
-[Specify the license under which your project is released]
+1. Clone the repository `git clone https://github.com/NithinKrishna10/GarbageGo.git`
+2. Navigrate to the working directory `cd garbagego`
+3. Open the project from the code editor `code .` or `atom .`
+4. Create virtual environment `python -m venv env`
+5. Activate the virtual environment `source env/Scripts/activate`
+6.Set up the database by configuring the PostgreSQL connection in the project's settings.py file.
+7. Create database tables
+    ```sh
+    python manage.py migrate
+    ```
+8. Install required packages to run the project `pip install -r requirements.txt`
+9. Create a super user
+    ```sh
+    python manage.py createsuperuser
+    ```
+    _GitBash users may have to run this to create a super user - `winpty python manage.py createsuperuser`_
+10. Run server
+    ```sh
+    python manage.py runserver
 
 ## Contact
 
