@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RegisterView, LoginView, UserView, LogoutView,UserApi
+from .views import RegisterView, LoginView, UserView, LogoutView,UserApi,UserList
 from .import views
 from .import scrap
 from .orders import OrderDetailAPIView,OrderListAPIView
@@ -16,7 +16,7 @@ urlpatterns = [
     path('login', LoginView.as_view()),
     path('user', UserView.as_view()),
     path('verify_token',views.verify_token,name='verifytoken'),
-    path('userlist',views.userlist),
+    path('userlist',UserList.as_view()),
     path('logout', LogoutView.as_view()),
     path('userapi',UserApi.as_view()),
     path('block_user/<int:id>/', views.block_user, name='block_user'),

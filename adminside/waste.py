@@ -11,10 +11,12 @@ from drf_spectacular.utils import extend_schema
 from .serializers import WasteSerializer, WasteCategorySerializer
 from waste.models import Waste, WasteCategory
 from rest_framework.exceptions import APIException
+from .permissions import IsTokenVerified
 
 
 class WasteCategoryView(APIView):
-
+    permission_classes = [IsTokenVerified]
+    extend_schema(responses=WasteCategorySerializer)
     def get(self, request):
         try:
             category = WasteCategory.objects.all()
@@ -25,9 +27,9 @@ class WasteCategoryView(APIView):
                 {'Waste_except': str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
-
+    extend_schema(request=WasteCategorySerializer,responses=WasteCategorySerializer)
     def post(self, request):
-        print('im here da')
+ 
         try:
             serializer = WasteCategorySerializer(data=request.data)
             if serializer.is_valid():
@@ -42,6 +44,9 @@ class WasteCategoryView(APIView):
 
 
 class WasteCategoryEdit(APIView):
+    permission_classes = [IsTokenVerified]
+
+    extend_schema(responses=WasteCategorySerializer)
     def get(self, request, pk):
         try:
             waste = WasteCategory.objects.get(id=pk)
@@ -49,9 +54,8 @@ class WasteCategoryEdit(APIView):
             return Response(waste_serializer.data)
         except WasteCategory.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
+    extend_schema(request=WasteCategorySerializer,responses=WasteCategorySerializer)
     def patch(self, request, pk):
-        print(pk, request.data)
         try:
 
             category = WasteCategory.objects.get(pk=pk)
@@ -64,9 +68,7 @@ class WasteCategoryEdit(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        print(serializer.errors, "show the error")
-        print(serializer.data,
-              "djklsfklsdklfjlsdjflsdkfjlsfjlsdjflajsldj l jsd fjadisjfiosjdofj djffjiodj")
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
@@ -77,12 +79,14 @@ class WasteCategoryEdit(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-api_view(['PATCH'])
 
 
 class WasteListAPIView(APIView):
+    permission_classes = [IsTokenVerified]
+
+    extend_schema(responses=WasteSerializer)
     def get(self, request):
-        print('im here')
+
         try:
             waste = Waste.objects.all()
             serializer = WasteSerializer(waste, many=True)
@@ -92,9 +96,8 @@ class WasteListAPIView(APIView):
                 {'waste_error': str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
-
+    extend_schema(request=WasteSerializer,responses=WasteSerializer)
     def post(self, request):
-        print('im here')
 
         try:
             serializer = WasteSerializer(data=request.data)
@@ -108,7 +111,7 @@ class WasteListAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-
+extend_schema(request=WasteSerializer,responses=WasteSerializer)
 @api_view(['PATCH'])
 def WasteEditAPIView(request, pk):
     try:
@@ -126,15 +129,18 @@ def WasteEditAPIView(request, pk):
 
 
 class WasteEditView(APIView):
+    permission_classes = [IsTokenVerified]
+    extend_schema(responses=WasteSerializer)
     def get(self, request, pk):
-        print("this is pk", pk)
         try:
             wast = Waste.objects.get(id=pk)
             waste_serializer = WasteSerializer(wast, many=False)
             return Response(waste_serializer.data)
         except Waste.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
+        
+        
+    extend_schema(request=WasteSerializer,responses=WasteSerializer)
     def patch(self, request, pk):
         waste = Waste.objects.get(id=pk)
         if not waste:

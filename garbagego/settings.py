@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+6*4-dycg(0vl4*zzz#yy-)@9!(95_!w@9ua$i9ka(i_fr41iu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -95,6 +95,8 @@ WSGI_APPLICATION = 'garbagego.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    
+    
     'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'myproject',
@@ -172,6 +174,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 
 AUTHENTICATION_BACKENDS = [
+    'rest_framework.authentication.TokenAuthentication',
 
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',

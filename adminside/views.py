@@ -9,10 +9,13 @@ from rest_framework import status
 from accounts.models import User
 import jwt
 import datetime
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from drf_spectacular.utils import extend_schema
 from rest_framework.exceptions import APIException
-
+from .permissions import IsTokenVerified
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class RegisterView(APIView):
     @extend_schema(responses=UserSerializer)
@@ -24,7 +27,7 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
-
+    # extend_schema
     def post(self, request):
         try:
             email = request.data['email']
@@ -35,9 +38,10 @@ class LoginView(APIView):
         try:
             user = User.objects.get(email=email)
             if not user.check_password(password):
-                Response({'status': 'Password is incorrect'})
+                return Response({'status': 'Password is incorrect'})
+            print(user.is_admin,'=====================')
             if user.is_admin==False:
-                Response({'status': 'User not admin'})
+                return Response({'status': 'User not admin'})
 
             if user is not None:
                 # user = LoginSerializer(user)
@@ -63,6 +67,7 @@ class LoginView(APIView):
 class UserView(APIView):
     JWT_SECRET = 'secret'
     JWT_ALGORITHM = 'HS256'
+    permission_classes = [IsTokenVerified]
 
     @extend_schema(responses=UserSerializer)
     def get(self, request):
@@ -127,7 +132,7 @@ class LogoutView(APIView):
 
 
 class UserApi(APIView):
-
+    permission_classes = [IsTokenVerified]
     @extend_schema(responses=UserSerializer)
     def get(request, id):
         user = User.objects.all()
@@ -147,13 +152,14 @@ class UserApi(APIView):
         return Response("User deleted")
 
 
-@api_view(['GET'])
-@extend_schema(responses=UserSerializer)
-def userlist(request):
-    user = User.objects.all()
-    serializer = UserCreateSerializer(user, many=True)
-    return Response(serializer.data)
+class UserList(APIView):
+    permission_classes = [IsTokenVerified]
 
+    @extend_schema(responses=UserSerializer)
+    def get(self, request):  # Add the 'self' parameter
+        user = User.objects.all()
+        serializer = UserCreateSerializer(user, many=True)
+        return Response(serializer.data)
 
 @api_view(['PATCH'])
 def block_user(request, id):

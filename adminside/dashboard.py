@@ -8,6 +8,7 @@ from rest_framework import serializers
 from pickup.models import PickupRequest
 from rest_framework.views import APIView
 from datetime import datetime
+from .permissions import IsTokenVerified 
 current_date = datetime.now()
 
 class PickupStatsSerializer(serializers.Serializer):
@@ -54,6 +55,7 @@ class YearlyPickupSerializer(serializers.Serializer):
 
 
 class PickupStatsView(APIView):
+    permission_classes = [IsTokenVerified]
     def get(self, request, format=None):
         yearly_stats = PickupRequest.objects.values(
             'pickup_month').annotate(count=Count('pk'))
@@ -67,7 +69,7 @@ class DailyPickupSerializer(serializers.ModelSerializer):
         fields = ('pickup_date', 'weight')
 
 
-class DailyPickupListAPIView(ListAPIView):
+class DailyPickupListAPIView(ListAPIView): 
     queryset = PickupRequest.objects.all()
     serializer_class = DailyPickupSerializer
     filterset_fields = ('pickup_date',)
@@ -108,7 +110,6 @@ def admindash(request):
             pickup_type='Scrap',
             pickup_month=current_date.month
         ).aggregate(total_weight=Sum('price'))['total_weight'] or 0
-        # print(scrap_price,"================================")
     except:
         scrap_price= 0
     # Get the total weight of monthly coll===============ected waste
@@ -134,9 +135,6 @@ def admindash(request):
 
     total_weight = scrap_weight + waste_weight
 
-    print("Monthly Collected Scrap Weight:", scrap_weight)
-    print("Monthly Collected Waste Weight:", waste_weight)
-    print("Total Monthly Weight:", total_weight)
 
     payload = {
         'waste_price': waste_price,

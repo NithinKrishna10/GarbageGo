@@ -3,10 +3,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from blog.serializers import PostSerializer, CategorySerializer, TagSerializer, PostSerializerr
 from blog.models import Post, Tag, Category
+from .permissions import IsTokenVerified
 
 
 class PostCategoryView(APIView):
-
+    permission_classes = [IsTokenVerified]
     def get(self, request):
         cat = Category.objects.all()
         serializer = CategorySerializer(cat, many=True)
@@ -14,7 +15,7 @@ class PostCategoryView(APIView):
 
 
 class PostTagView(APIView):
-
+    permission_classes = [IsTokenVerified]
     def get(self, request):
         tag = Tag.objects.all()
         serializer = TagSerializer(tag, many=True)
@@ -23,6 +24,7 @@ class PostTagView(APIView):
 
 
 class PostView(APIView):
+    permission_classes = [IsTokenVerified]
     def get(self, request):
         posts = Post.objects.all()
         serializer = PostSerializerr(posts, many=True)
@@ -39,6 +41,7 @@ class PostView(APIView):
 
 
 class PostDetailView(APIView):
+    permission_classes = [IsTokenVerified]
     def get(self, request, pk):
         try:
             post = Post.objects.get(pk=pk)

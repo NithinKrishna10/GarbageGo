@@ -4,9 +4,14 @@ from rest_framework import status
 from pickup.models import PickupRequest, Item
 from pickup.serializers import PickupRequestSerializer, PickupItmeSerializer
 from .serializers import PickupSerializer
+from drf_spectacular.utils import extend_schema
+from .permissions import IsTokenVerified
 
 
 class PickupRequestListCreateAPIView(APIView):
+    permission_classes = [IsTokenVerified]
+    extend_schema(responses=PickupItmeSerializer)
+
     def get(self, request):
         pickup_requests = PickupRequest.objects.all()
         serializer = PickupSerializer(pickup_requests, many=True)
@@ -21,11 +26,14 @@ class PickupRequestListCreateAPIView(APIView):
 
 
 class PickupRequestRetrieveUpdateDestroyAPIView(APIView):
+    permission_classes = [IsTokenVerified]
     def get_object(self, pk):
         try:
             return PickupRequest.objects.get(pk=pk)
         except PickupRequest.DoesNotExist:
             return None
+
+    extend_schema(responses=PickupItmeSerializer)
 
     def get(self, request, pk):
         pickup_request = self.get_object(pk)
@@ -57,12 +65,15 @@ class PickupRequestRetrieveUpdateDestroyAPIView(APIView):
 
 
 class PickupItemsView(APIView):
+    permission_classes = [IsTokenVerified]
+    extend_schema(responses=PickupItmeSerializer)
 
     def get(self, request):
         pickup_items = Item.objects.all()
         serializer = PickupItmeSerializer(pickup_items, many=True)
 
         return Response(serializer.data)
+    extend_schema(request=PickupItmeSerializer, responses=PickupItmeSerializer)
 
     def post(self, request):
 
@@ -74,7 +85,8 @@ class PickupItemsView(APIView):
 
 
 class PickupDetailItemsView(APIView):
-
+    permission_classes = [IsTokenVerified]
+    extend_schema(responses=PickupItmeSerializer)
     def get(self, request, pk):
         pickup_items = Item.objects.filter(pickup_request=pk)
         serializer = PickupItmeSerializer(pickup_items, many=True)

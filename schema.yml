@@ -3,29 +3,6 @@ info:
   title: Django DRF Waste Management
   version: 0.0.0
 paths:
-  /adminside/addcat:
-    get:
-      operationId: adminside_addcat_retrieve
-      tags:
-      - adminside
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          description: No response body
-    post:
-      operationId: adminside_addcat_create
-      tags:
-      - adminside
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          description: No response body
   /adminside/block_user/{id}/:
     patch:
       operationId: adminside_block_user_partial_update
@@ -35,6 +12,36 @@ paths:
         schema:
           type: integer
         required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/daily-pickups/:
+    get:
+      operationId: adminside_daily_pickups_list
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DailyPickup'
+          description: ''
+  /adminside/dash:
+    get:
+      operationId: adminside_dash_retrieve
       tags:
       - adminside
       security:
@@ -55,14 +62,22 @@ paths:
       - {}
       responses:
         '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-          description: ''
+          description: No response body
   /adminside/logout:
     post:
       operationId: adminside_logout_create
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/monthly-pickups/:
+    get:
+      operationId: adminside_monthly_pickups_retrieve
       tags:
       - adminside
       security:
@@ -147,6 +162,216 @@ paths:
       responses:
         '204':
           description: No response body
+  /adminside/pickup-item:
+    get:
+      operationId: adminside_pickup_item_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: adminside_pickup_item_create
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/pickup-request/{id}/:
+    get:
+      operationId: adminside_pickup_request_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: adminside_pickup_request_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: adminside_pickup_request_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /adminside/pickup-requests/:
+    get:
+      operationId: adminside_pickup_requests_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: adminside_pickup_requests_create
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/pickup-stats/:
+    get:
+      operationId: adminside_pickup_stats_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/pickupitem/{id}/:
+    get:
+      operationId: adminside_pickupitem_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/post-categories/:
+    get:
+      operationId: adminside_post_categories_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/post-tags:
+    get:
+      operationId: adminside_post_tags_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/posts/:
+    get:
+      operationId: adminside_posts_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: adminside_posts_create
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/posts/{id}/:
+    get:
+      operationId: adminside_posts_retrieve_2
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: adminside_posts_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /adminside/register:
     post:
       operationId: adminside_register_create
@@ -163,9 +388,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
           description: ''
-  /adminside/scrap_category:
+  /adminside/scrap-categories/:
     get:
-      operationId: adminside_scrap_category_retrieve
+      operationId: adminside_scrap_categories_retrieve
       tags:
       - adminside
       security:
@@ -176,7 +401,7 @@ paths:
         '200':
           description: No response body
     post:
-      operationId: adminside_scrap_category_create
+      operationId: adminside_scrap_categories_create
       tags:
       - adminside
       security:
@@ -186,9 +411,9 @@ paths:
       responses:
         '200':
           description: No response body
-  /adminside/scrapp/{id}/:
-    patch:
-      operationId: adminside_scrapp_partial_update
+  /adminside/scrap-categories/{id}/:
+    get:
+      operationId: adminside_scrap_categories_retrieve_2
       parameters:
       - in: path
         name: id
@@ -203,6 +428,40 @@ paths:
       - {}
       responses:
         '200':
+          description: No response body
+    patch:
+      operationId: adminside_scrap_categories_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: adminside_scrap_categories_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
           description: No response body
   /adminside/scraps/:
     get:
@@ -226,6 +485,58 @@ paths:
       - {}
       responses:
         '200':
+          description: No response body
+  /adminside/scrapss/{id}/:
+    get:
+      operationId: adminside_scrapss_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: adminside_scrapss_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: adminside_scrapss_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
           description: No response body
   /adminside/unblock_user/{id}/:
     patch:
@@ -311,6 +622,197 @@ paths:
       responses:
         '200':
           description: No response body
+  /adminside/verify_token:
+    get:
+      operationId: adminside_verify_token_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/waste-categories/:
+    get:
+      operationId: adminside_waste_categories_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: adminside_waste_categories_create
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/waste-edit/{id}/:
+    get:
+      operationId: adminside_waste_edit_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: adminside_waste_edit_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: adminside_waste_edit_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /adminside/waste-list/:
+    get:
+      operationId: adminside_waste_list_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: adminside_waste_list_create
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/waste-patch/{id}/:
+    get:
+      operationId: adminside_waste_patch_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: adminside_waste_patch_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/wastecategory:
+    get:
+      operationId: adminside_wastecategory_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: adminside_wastecategory_create
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /adminside/wasteview:
+    get:
+      operationId: adminside_wasteview_retrieve
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: adminside_wasteview_create
+      tags:
+      - adminside
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /api/addresses/{id}/:
     get:
       operationId: api_addresses_retrieve
@@ -355,6 +857,54 @@ paths:
           description: No response body
     post:
       operationId: api_cities_create
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/customer-pickup-requests/{customer_id}/:
+    get:
+      operationId: api_customer_pickup_requests_retrieve
+      parameters:
+      - in: path
+        name: customer_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/daily_pickup_weight/:
+    get:
+      operationId: api_daily_pickup_weight_retrieve
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/dash/{id}/:
+    get:
+      operationId: api_dash_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
       tags:
       - api
       security:
@@ -427,6 +977,18 @@ paths:
       responses:
         '200':
           description: No response body
+  /api/monthly_pickup_count/:
+    get:
+      operationId: api_monthly_pickup_count_retrieve
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /api/orders/{id}/:
     get:
       operationId: api_orders_retrieve
@@ -436,6 +998,30 @@ paths:
         schema:
           type: integer
         required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/pickup_type_by_month/:
+    get:
+      operationId: api_pickup_type_by_month_retrieve
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/pickup_type_distribution/:
+    get:
+      operationId: api_pickup_type_distribution_retrieve
       tags:
       - api
       security:
@@ -711,6 +1297,64 @@ paths:
       responses:
         '200':
           description: No response body
+  /blog/posts/:
+    get:
+      operationId: blog_posts_retrieve
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: blog_posts_create
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /blog/postsa/{id}/:
+    get:
+      operationId: blog_postsa_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: blog_postsa_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - blog
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /orderplace_order:
     post:
       operationId: orderplace_order_create
@@ -723,11 +1367,46 @@ paths:
       responses:
         '200':
           description: No response body
+  /pickup/pickup-requests/:
+    get:
+      operationId: pickup_pickup_requests_retrieve
+      tags:
+      - pickup
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: pickup_pickup_requests_create
+      tags:
+      - pickup
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /place:
     post:
       operationId: place_create
       tags:
       - place
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /scrap/scrap-list:
+    get:
+      operationId: scrap_scrap_list_retrieve
+      tags:
+      - scrap
       security:
       - cookieAuth: []
       - basicAuth: []
@@ -758,7 +1437,7 @@ paths:
       responses:
         '200':
           description: No response body
-  /waste/wastes:
+  /waste/wastes/:
     get:
       operationId: waste_wastes_retrieve
       tags:
@@ -770,19 +1449,21 @@ paths:
       responses:
         '200':
           description: No response body
-    post:
-      operationId: waste_wastes_create
-      tags:
-      - waste
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          description: No response body
 components:
   schemas:
+    DailyPickup:
+      type: object
+      properties:
+        pickup_date:
+          type: string
+          format: date
+        weight:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+      required:
+      - pickup_date
     Login:
       type: object
       properties:
