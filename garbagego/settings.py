@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+6*4-dycg(0vl4*zzz#yy-)@9!(95_!w@9ua$i9ka(i_fr41iu'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -95,27 +95,17 @@ WSGI_APPLICATION = 'garbagego.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    
-    
     'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'myproject',
-            'USER' : 'myprojectuser',
-            'PASSWORD' : 'password',
-            'HOST' : 'localhost',
-            'PORT': '5432',
-        }
-
-
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'garbagego',
-    #     'USER': 'postgres',
-    #     'PASSWORD': '2002',
-    #     'HOST': 'localhost',
-    # }
-
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv("POSTGRES_DB"),
+        'USER': os.getenv("POSTGRES_USER"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD"),
+        'HOST': os.getenv("POSTGRES_HOST"),
+        'PORT': os.getenv("POSTGRES_PORT"),
+    }
 }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
