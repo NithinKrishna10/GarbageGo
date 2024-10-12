@@ -59,7 +59,6 @@ class LoginView(APIView):
         except:
             return Response({'status': 'Please provide the mentioned details'})
         user = User.objects.filter(email=email).first()
-        # print(user.password)
         try:
             user = User.objects.get(email=email)
             if not user.check_password(password):

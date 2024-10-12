@@ -39,7 +39,6 @@ class LoginView(APIView):
             user = User.objects.get(email=email)
             if not user.check_password(password):
                 return Response({'status': 'Password is incorrect'})
-            print(user.is_admin,'=====================')
             if user.is_admin==False:
                 return Response({'status': 'User not admin'})
 

@@ -35,7 +35,6 @@ def userdash(request, pk):
         pickup_tracker_serializer = PickupTrackerSerializer(pickup_tracker,many=True)
         serialized_pickup_tracker = pickup_tracker_serializer.data
         
-        print(serialized_pickup_tracker,'====================')
     except:
     
         serialized_pickup_tracker = {
@@ -67,7 +66,6 @@ def userdash(request, pk):
             pickup_type='Scrap',
             pickup_month=current_date.month
         ).aggregate(total_weight=Sum('price'))['total_weight'] or 0
-        # print(scrap_price,"================================")
     except:
         scrap_price= 0
 
@@ -92,9 +90,6 @@ def userdash(request, pk):
 
     total_weight = scrap_weight + waste_weight
 
-    print("Monthly Collected Scrap Weight:", scrap_weight)
-    print("Monthly Collected Waste Weight:", waste_weight)
-    print("Total Monthly Weight:", total_weight)
 
     payload = {
         'waste_price': waste_price,
@@ -214,7 +209,6 @@ def pickup_weight_growth(request):
         'labels': labels,
         'data': weights,
     }
-    print(response_data, '=====================')
     return Response(response_data)
 
 
